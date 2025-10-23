@@ -482,6 +482,17 @@ body {
     display: none;
   }
 
+  .company-name-title {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 120%;
+  color: rgb(208, 221, 210);
+  margin-bottom: 0.5rem;
+  height: 30px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
   .right-section {
     position: relative;
     z-index: 10;
