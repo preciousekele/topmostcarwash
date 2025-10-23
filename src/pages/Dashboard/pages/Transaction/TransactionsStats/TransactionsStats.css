@@ -1,0 +1,96 @@
+.total-funds-container {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.funds-card {
+  border-radius: 10px;
+  border: 1px solid rgba(223, 227, 234, 1);
+  padding: 30px 20px;
+  min-width: calc(25% - 11.25px);
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.funds-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.icon-container {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0px;
+  margin-right: 15px;
+}
+
+.funds-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: rgb(46, 50, 57);
+  margin: 0;
+  letter-spacing: -1px;
+  height: 34px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.funds-labels {
+  font-size: 24px;
+  color: rgba(131, 138, 148, 1);
+  font-weight: 400;
+  letter-spacing: -0.05px;
+  text-transform: uppercase;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+@media (max-width: 1024px) {
+  .total-funds-container {
+    flex-wrap: wrap;
+  }
+  
+  .funds-card {
+    min-width: calc(50% - 7.5px);
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 640px) {
+  .total-funds-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .funds-card {
+    min-width: auto;
+    width: 100%;
+    padding: 40px 20px;
+    min-height: 80px;
+    margin-bottom: 0px;
+  }
+  
+  .icon-container {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .funds-labels {
+    font-size: 14px;
+  }
+  .funds-value {
+    font-size: 15px;
+  }
+}

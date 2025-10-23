@@ -1,0 +1,607 @@
+.transactions-container {
+  padding: 0;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 10px 0 auto;
+  overflow-x: auto;
+  gap: 2px;
+  display: flex;
+  flex-direction: column;
+}
+
+.transactions-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: rgba(65, 68, 73, 1);
+  margin-bottom: 24px;
+  letter-spacing: 0%;
+  line-height: 120%;
+  margin-top: 0;
+  margin-left: -15px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* Table Styles */
+.transactions-table {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  background: white;
+  border: 1px solid #e5e7eb;
+  margin-left: -15px;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr 0.8fr 1fr;
+  background: rgba(242, 244, 247, 1);
+  padding: 16px 0;
+  border-bottom: 1px solid #e5e7eb;
+  align-items: center;
+  min-width: 600px;
+}
+
+.header-cell {
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(65, 68, 73, 1);
+  display: flex;
+  align-items: center;
+  line-height: 20px;
+  letter-spacing: -0.5px;
+  justify-content: flex-start;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.header-cell.date-header,
+.header-cell.method-header,
+.header-cell.status-header {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.header-cell.date-header:hover,
+.header-cell.method-header:hover,
+.header-cell.status-header:hover {
+  color: #374151;
+}
+
+.header-cell.date-header{
+  margin-left: 35px;
+}
+
+.header-cell.amount-header {
+  justify-content: center;
+}
+
+.table-body {
+  background: rgba(255, 255, 255, 1);
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr 0.8fr 1fr;
+  padding: 16px 0;
+  border-bottom: 0.4px solid rgba(185, 194, 209, 1);
+  transition: background-color 0.2s ease;
+  align-items: center;
+  min-width: 600px;
+}
+
+.table-row:hover {
+  background-color: #fafbfc;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.cell {
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  min-height: 50px;
+}
+
+/* Date Cell */
+.date-cell {
+  gap: 12px;
+  align-items: center;
+}
+
+.transaction-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.transaction-icon.income {
+  background: rgba(245, 158, 11, 0.15);
+}
+
+.transaction-icon.outgoing {
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.transaction-icon.successful {
+  background: rgba(242, 255, 231, 1);
+}
+
+.transaction-icon.successful svg {
+  color: rgba(124, 216, 10, 1);
+}
+
+.transaction-icon.failed {
+  background: rgba(255, 218, 227, 1);
+}
+
+.transaction-icon.failed svg {
+  color: rgba(255, 10, 69, 1);
+}
+
+.transaction-icon.pending {
+  background: rgba(255, 245, 217, 1);
+}
+
+.transaction-icon.pending svg {
+  color: rgba(255, 191, 0, 1);
+}
+
+.transaction-icon-svg {
+  width: 25.7px;
+  height: 20.92px;
+}
+
+.date-time-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.date {
+  font-weight: 500;
+  color: rgba(102, 107, 115, 1);
+  font-size: 14px;
+  letter-spacing: -0.5px;
+  line-height: 18px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.time {
+  font-size: 14px;
+  font-family: inter, sans-serif;
+  color: rgba(83, 87, 94, 1);
+  font-weight: 400;
+  letter-spacing: 0%;
+  line-height: 150%;
+  opacity: 40%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Details Cell */
+.details-cell {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  justify-content: center;
+}
+
+.transaction-details {
+  font-weight: 500;
+  color: rgba(102, 107, 115, 1);
+  font-size: 14px;
+  letter-spacing: -0.5px;
+  line-height: 18px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.account-number {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: rgba(83, 87, 94, 1);
+  font-weight: 400;
+  line-height: 150%;
+  letter-spacing: 0%;
+  opacity: 40%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  color: #535456;
+  width: 16px;
+  height: 16px;
+}
+
+.copy-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.copied-indicator {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #10b981;
+}
+
+.copied-text {
+  font-size: 12px;
+  font-weight: 400;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Method Cell */
+.method-cell {
+  color: rgba(65, 68, 73, 1);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.5px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Status Cell */
+.status-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.status-badge {
+  padding: 0px 2px;
+  width: 70px;
+  height: 20px;
+  min-width: 70px;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-align: center;
+  min-width: fit-content;
+  line-height: 20px;
+  letter-spacing: -0.5px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.status-badge[data-status="Successful"] {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.status-badge[data-status="Failed"] {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.status-badge[data-status="Pending"] {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+/* Amount Cell */
+.amount-cell {
+  font-size: 14px;
+  color: rgba(65, 68, 73, 1);
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: -0.5px;
+  font-family: plus-jakarta-sans, sans-serif;
+}
+
+.positive-amount {
+  font-weight: 600;
+}
+
+.negative-amount {
+  font-weight: 600;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 400px;
+  width: 90%;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  font-size: 15px;
+  font-weight: 400;
+  color: #1f2937;
+  margin: 0;
+  font-family: plus-jakarta-sans, sans-serif;
+}
+
+.modal-header button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: rgb(159, 151, 151);
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-option {
+  padding: 10px 12px;
+  border: 0.5px solid rgba(223, 242, 232, 1);
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  font-family: plus-jakarta-sans, sans-serif;
+}
+
+.filter-option:hover {
+  background-color: rgba(223, 242, 232, 1);
+}
+
+.filter-option.active {
+  background-color: rgba(34, 134, 82, 1);
+  color: white;
+  border-color: rgba(34, 134, 82, 1);
+}
+
+.date-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.date-input {
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 13px;
+  transition: border-color 0.2s ease;
+  font-family: plus-jakarta-sans, sans-serif;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: rgba(34, 134, 82, 1);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Responsive Design */
+/* Large Desktop */
+@media (min-width: 1400px) {
+  .transactions-container {
+    max-width: 1400px;
+    padding: 0 20px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .transactions-container {
+    max-width: 1200px;
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .header-cell.date-header{
+  margin-left: 3px;
+}
+}
+/* Tablet Large */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .transactions-container {
+    max-width: 1024px;
+    padding: 0 16px;
+  }
+
+  .table-header,
+  .table-row {
+    grid-template-columns: 0.9fr 1.4fr 0.9fr 0.7fr 0.9fr;
+    min-width: 800px;
+  }
+
+  .header-cell,
+  .cell {
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .transaction-icon {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .transactions-container {
+    max-width: 768px;
+    padding: 0 12px;
+    margin: 12px auto 0 auto;
+  }
+
+  .table-header,
+  .table-row {
+    grid-template-columns: 0.8fr 1.3fr 0.8fr 0.6fr 0.8fr;
+    padding: 16px 0;
+    min-width: 700px;
+  }
+
+  .header-cell,
+  .cell {
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .transaction-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .status-badge {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .date {
+    font-size: 13px;
+  }
+
+  .time {
+    font-size: 11px;
+  }
+
+  .transaction-details {
+    font-size: 13px;
+  }
+
+  .account-number {
+    font-size: 11px;
+  }
+}
+
+/* Mobile Large */
+@media (min-width: 480px) and (max-width: 767px) {
+  .transactions-container {
+    max-width: calc(100% - 16px);
+    padding: 0 8px;
+    margin: 8px auto 0 auto;
+  }
+
+  .transactions-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .table-header,
+  .table-row {
+    grid-template-columns: 0.7fr 1.2fr 0.7fr 0.5fr 0.7fr;
+    padding: 12px 0;
+    min-width: 600px;
+  }
+
+  .header-cell,
+  .cell {
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  .date-cell {
+    gap: 8px;
+  }
+
+  .transaction-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .modal-content {
+    margin: 12px;
+    padding: 16px;
+    width: calc(100% - 24px);
+  }
+}
+
+/* Mobile Small */
+@media (max-width: 479px) {
+  .transactions-container {
+    max-width: calc(100% - 12px);
+    padding: 0 6px;
+    margin: 6px auto 0 auto;
+  }
+
+  .transactions-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .table-header,
+  .table-row {
+    grid-template-columns: 0.6fr 1.1fr 0.6fr 0.4fr 0.6fr;
+    padding: 10px 0;
+    min-width: 500px;
+  }
+
+  .header-cell,
+  .cell {
+    padding: 0 6px;
+    font-size: 10px;
+  }
+
+  .date-cell {
+    gap: 6px;
+  }
+
+  .transaction-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .modal-content {
+    margin: 8px;
+    padding: 12px;
+    width: calc(100% - 16px);
+  }
+
+  .date {
+    font-size: 12px;
+  }
+
+  .time {
+    font-size: 10px;
+  }
+
+  .transaction-details {
+    font-size: 12px;
+  }
+
+  .account-number {
+    font-size: 10px;
+  }
+}

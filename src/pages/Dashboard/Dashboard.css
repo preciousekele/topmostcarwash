@@ -1,0 +1,28 @@
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f8fafc;
+  position: relative;
+}
+
+.dashboard-main-content {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #f8fafc;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 800px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+  
+  .dashboard-main-content {
+    flex: 1;
+    padding-bottom: 80px; /* Space for mobile sidebar */
+  }
+}
