@@ -36,7 +36,7 @@ const UserManagement = () => {
     <div className="account-overview">
       <Header title="Staff Payment" />
 
-      <main className="main-content">
+      <main className="staff-main-content">
 
         {/* Stats Cards */}
         <motion.div
@@ -45,7 +45,7 @@ const UserManagement = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <UserStatsCard
+          {/* <UserStatsCard
             value={stats.totalUsers.toLocaleString()}
             label="TOTAL USERS"
             delay={0.2}
@@ -64,9 +64,9 @@ const UserManagement = () => {
             value={stats.pendingKyc.toLocaleString()}
             label="PENDING KYC"
             delay={0.35}
-          />
+          /> */}
         </motion.div>
-        <div className="transaction-section">
+        <div className="staff-payment-section">
             <UserData />
           </div>
 

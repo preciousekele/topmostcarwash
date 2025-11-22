@@ -34,9 +34,9 @@ const TransactionDashboard = () => {
     <div className="account-overview">
       <Header title="Transactions" />
 
-      <main className="user-main-content">
+      {/* <main className="user-main-content"> */}
         {/* Total Funds Section */}
-        <TransactionStats />
+        {/* <TransactionStats /> */}
 
         {/* Stats Cards */}
         <motion.div
@@ -48,7 +48,7 @@ const TransactionDashboard = () => {
           
         </motion.div>
 
-        <div className="transaction-section">
+        <div className="daily-transaction-section">
             <TransactionsTable />
           </div>
 
@@ -58,7 +58,7 @@ const TransactionDashboard = () => {
             <p>Loading data...</p>
           </div>
         )}
-      </main>
+      {/* </main> */}
     </div>
   );
 };

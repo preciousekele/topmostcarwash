@@ -12,6 +12,7 @@ import Car from './pages/EntryPage/Car/Car';
 import Jeep from './pages/EntryPage/Jeep/Jeep';
 import PickUp from './pages/EntryPage/PickUp/PickUp';
 import Bus from './pages/EntryPage/Bus/Bus';
+import Rug from './pages/EntryPage/Rug/Rug';
 
 const DashboardLayout = () => {
   return (
@@ -45,10 +46,7 @@ const Dashboard = () => {
          <Route path="entry/jeep" element={<Jeep />} />
          <Route path="entry/pick-up" element={<PickUp />} />
          <Route path="entry/bus" element={<Bus />} />
-        {/* <Route path="investment" element={<Transaction />} />
-        <Route path="cardmanagement" element={<Transaction />} />
-        <Route path="zakat" element={<Transaction />} />
-        <Route path="kyc" element={<Transaction />} /> */}
+         <Route path="entry/rug" element={<Rug />} />
       </Route>
     </Routes>
   );

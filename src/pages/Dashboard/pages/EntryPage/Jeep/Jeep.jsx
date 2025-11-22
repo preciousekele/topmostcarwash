@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import "./Jeep.css";
 import { useNavigate } from "react-router-dom";
+import { useCarWash } from "../../../../../hooks/useCarWash";
 
 const Jeep = () => {
   const [plateNumber, setPlateNumber] = useState("");
@@ -9,17 +10,17 @@ const Jeep = () => {
   const [washerName, setWasherName] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const navigate = useNavigate();
+  const { createBooking, isLoading } = useCarWash();
 
   const washItems = [
-    { id: "car-basic", name: "Car (Basic)", price: 1500 },
+    { id: "jeep-basic", name: "Basic(Jeep)", price: 1500 },
     { id: "engine", name: "Engine", price: 2000 },
     { id: "radiator", name: "Radiator", price: 1500 },
     { id: "condenser", name: "Condenser", price: 1500 },
-    { id: "seat", name: "Seat", price: 1300 },
-    { id: "threeseat", name: "3 Seaters", price: 1500 },
+    { id: "seat-two", name: "Seat(two)", price: 1300 },
+    { id: "seat-three", name: "Seat(three)", price: 1500 },
     { id: "floor", name: "Floor", price: 800 },
     { id: "roof", name: "Roof", price: 800 },
     { id: "boot", name: "Boot", price: 800 },
@@ -52,108 +53,40 @@ const Jeep = () => {
   };
 
   const handleConfirm = async () => {
-    setIsProcessing(true);
     setShowModal(false);
 
     try {
-      // Get token from localStorage (adjust based on your auth implementation)
-      const token =
-        localStorage.getItem("authToken") || localStorage.getItem("token");
-
-      if (!token) {
-        throw new Error("Authentication token not found");
-      }
-
-      const requestBody = {
+      const bookingData = {
         plateNumber: plateNumber.trim(),
+        washer: washerName.trim(),
         items: selectedItems.map(item => ({
           name: item.name,
           price: item.price
         })),
-        washer: washerName.trim(),
         paymentMethod: paymentMethod,
-        totalAmount: calculateTotal(),
+        totalAmount: calculateTotal()
       };
 
-      console.log("Sending booking request:", requestBody);
+      const result = await createBooking(bookingData);
 
-      const response = await fetch("YOUR_API_ENDPOINT_HERE", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(requestBody)
-      });
-
-      console.log("Response status:", response.status);
-
-      let data;
-      const contentType = response.headers.get("content-type");
-
-      if (contentType && contentType.includes("application/json")) {
-        data = await response.json();
+      if (result.success) {
+        // Reset form
+        setPlateNumber("");
+        setSelectedItems([]);
+        setWasherName("");
+        setPaymentMethod("");
+        
+        // Show success message
+        alert(result.message || "Booking successful!");
+        
+        // Optional: Navigate to a different page
+        // navigate("/userdashboard/home");
       } else {
-        const textResponse = await response.text();
-        console.error("Non-JSON response:", textResponse);
-
-        if (
-          textResponse.includes("<!DOCTYPE html>") ||
-          textResponse.includes("<html>")
-        ) {
-          throw new Error(
-            "Server returned HTML page instead of API response. Check if the API endpoint is correct."
-          );
-        } else {
-          throw new Error(`Server returned: ${textResponse}`);
-        }
-      }
-
-      console.log("Response data:", data);
-
-      if (response.ok) {
-        setTimeout(() => {
-          setIsProcessing(false);
-          console.log("Booking successful:", data);
-          // Reset form
-          setPlateNumber("");
-          setSelectedItems([]);
-          setWasherName("");
-          setPaymentMethod("");
-          alert("Booking successful!");
-        }, 2000);
-      } else {
-        setTimeout(() => {
-          setIsProcessing(false);
-          const errorMessage =
-            data?.message ||
-            data?.error ||
-            "Booking failed. Please try again.";
-          console.error("Booking failed:", errorMessage);
-          alert(errorMessage);
-        }, 2000);
+        alert(result.message || "Booking failed. Please try again.");
       }
     } catch (error) {
       console.error("Error processing booking:", error);
-      setTimeout(() => {
-        setIsProcessing(false);
-
-        let errorMessage = "An error occurred. Please try again.";
-
-        if (error.message.includes("Failed to fetch")) {
-          errorMessage =
-            "Unable to connect to server. Please check your internet connection.";
-        } else if (error.message.includes("Authentication token not found")) {
-          errorMessage = "Please log in again to continue.";
-        } else if (error.message.includes("HTML page")) {
-          errorMessage = "Server configuration error. Please contact support.";
-        } else {
-          errorMessage = error.message;
-        }
-
-        console.error("Final error:", errorMessage);
-        alert(errorMessage);
-      }, 2000);
+      alert("An error occurred. Please try again.");
     }
   };
 
@@ -166,7 +99,7 @@ const Jeep = () => {
         >
           <ArrowLeft size={22} />
         </button>
-        <h2>Car Wash Booking</h2>
+        <h2>Jeep Wash Booking</h2>
       </div>
 
       <div className="carwash-content">
@@ -194,7 +127,7 @@ const Jeep = () => {
                 onClick={() => handleItemToggle(item)}
               >
                 <span className="car-item-name">{item.name}</span>
-                <span className="car-item-price">{item.price}</span>
+                <span className="car-item-price">₦{item.price}</span>
               </button>
             ))}
           </div>
@@ -247,15 +180,15 @@ const Jeep = () => {
             selectedItems.length === 0 ||
             !washerName ||
             !paymentMethod ||
-            isProcessing
+            isLoading
           }
         >
-          {isProcessing ? "Processing..." : "Book Now"}
+          {isLoading ? "Processing..." : "Book Now"}
         </button>
       </div>
 
       {/* Processing Overlay */}
-      {isProcessing && (
+      {isLoading && (
         <div className="processing-overlay">
           <div className="processing-message">
             <div className="processing-spinner"></div>
@@ -321,9 +254,9 @@ const Jeep = () => {
             <button
               className="confirm-button"
               onClick={handleConfirm}
-              disabled={isProcessing}
+              disabled={isLoading}
             >
-              {isProcessing ? "Processing..." : "Confirm Booking"}
+              {isLoading ? "Processing..." : "Confirm Booking"}
             </button>
           </div>
         </div>
@@ -333,4 +266,3 @@ const Jeep = () => {
 };
 
 export default Jeep;
-

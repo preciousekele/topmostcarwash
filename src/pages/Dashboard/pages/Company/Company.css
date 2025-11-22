@@ -4,15 +4,21 @@
   box-sizing: border-box;
 }
 
-.washer-page {
+.account-overview {
   flex: 1;
-  padding: clamp(8px, 2vw, 22px) clamp(12px, 3vw, 22px);
-  background-color: transparent;
+  background-color: #f8f9fa;
   min-height: 100%;
 }
 
-.washer-header h1 {
-  font-size: clamp(16px, 3vw, 22px);
+.transaction-section {
+  flex: 1;
+  padding: 18px 50px;
+  background-color: #f8f9fa;
+  min-height: 100%;
+}
+
+.company-header h1 {
+  font-size: 22px;
   font-weight: 600;
   color: #075c40;
   margin: 0;
@@ -21,14 +27,19 @@
   letter-spacing: -6%;
 }
 
+.company-header {
+  margin-bottom: 16px;
+}
+
 .search-container {
   display: flex;
-  gap: clamp(8px, 1.5vw, 12px);
-  margin-bottom: clamp(8px, 1.5vw, 12px);
+  gap: 12px;
+  margin-bottom: 12px;
   align-items: center;
   justify-content: flex-end;
-  padding: clamp(8px, 2vw, 16px);
-  margin-top: clamp(-15px, -1vw, -20px);
+  padding: 14px;
+  margin-bottom: 16px;
+  margin-top: -10px;
 }
 
 .search-input-wrapper {
@@ -39,21 +50,19 @@
 
 .search-icon {
   position: absolute;
-  left: clamp(12px, 2vw, 16px);
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
   color: #9ca3af;
   pointer-events: none;
-  width: clamp(16px, 2.5vw, 20px);
-  height: clamp(16px, 2.5vw, 20px);
 }
 
 .search-inputs {
   width: 100%;
-  padding: clamp(10px, 1.5vw, 12px) clamp(12px, 2vw, 16px) clamp(10px, 1.5vw, 12px) clamp(40px, 6vw, 48px);
+  padding: 12px 16px 12px 48px;
   border: 1px solid #e5e7eb;
-  border-radius: clamp(8px, 1.5vw, 12px);
-  font-size: clamp(12px, 1.8vw, 14px);
+  border-radius: 12px;
+  font-size: 14px;
   background-color: white;
   transition: border-color 0.2s ease;
   box-sizing: border-box;
@@ -69,7 +78,6 @@
 
 .search-inputs::placeholder {
   color: #9ca3af;
-  font-size: clamp(11px, 1.6vw, 14px);
 }
 
 .filter-button-wrapper {
@@ -79,21 +87,14 @@
 .filter-button {
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: clamp(8px, 1.5vw, 12px);
-  padding: clamp(10px, 1.5vw, 12px);
+  border-radius: 12px;
+  padding: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   color: #6b7280;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: clamp(38px, 5vw, 44px);
-  min-height: clamp(38px, 5vw, 44px);
-}
-
-.filter-button svg {
-  width: clamp(16px, 2.5vw, 20px);
-  height: clamp(16px, 2.5vw, 20px);
 }
 
 .filter-button:hover {
@@ -113,23 +114,23 @@
   top: calc(100% + 8px);
   right: 0;
   background: white;
-  border-radius: clamp(10px, 1.5vw, 12px);
+  border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  padding: clamp(12px, 2vw, 16px);
+  padding: 16px;
   z-index: 100;
-  min-width: clamp(280px, 40vw, 320px);
+  min-width: 320px;
 }
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: clamp(12px, 2vw, 16px);
+  margin-bottom: 16px;
 }
 
 .calendar-month {
   font-weight: 600;
-  font-size: clamp(14px, 2vw, 16px);
+  font-size: 16px;
   color: #1f2937;
 }
 
@@ -154,22 +155,22 @@
 .calendar-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: clamp(2px, 0.5vw, 4px);
-  margin-bottom: clamp(2px, 0.5vw, 4px);
+  gap: 4px;
+  margin-bottom: 4px;
 }
 
 .calendar-weekdays div {
   text-align: center;
-  font-size: clamp(10px, 1.5vw, 12px);
+  font-size: 12px;
   font-weight: 600;
   color: #6b7280;
-  padding: clamp(6px, 1vw, 8px) 0;
+  padding: 8px 0;
 }
 
 .calendar-days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: clamp(2px, 0.5vw, 4px);
+  gap: 4px;
 }
 
 .calendar-day {
@@ -177,8 +178,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(12px, 1.8vw, 14px);
-  border-radius: clamp(6px, 1vw, 8px);
+  font-size: 14px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
   color: #1f2937;
@@ -209,8 +210,8 @@
 }
 
 .calendar-actions {
-  margin-top: clamp(10px, 1.5vw, 12px);
-  padding-top: clamp(10px, 1.5vw, 12px);
+  margin-top: 12px;
+  padding-top: 12px;
   border-top: 1px solid #e5e7eb;
   display: flex;
   justify-content: center;
@@ -219,9 +220,9 @@
 .clear-filter {
   background: none;
   border: 1px solid #e5e7eb;
-  padding: clamp(6px, 1vw, 8px) clamp(12px, 2vw, 16px);
-  border-radius: clamp(6px, 1vw, 8px);
-  font-size: clamp(11px, 1.6vw, 13px);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
   cursor: pointer;
   color: #6b7280;
   transition: all 0.2s ease;
@@ -237,14 +238,14 @@
 .date-filter-badge {
   display: inline-flex;
   align-items: center;
-  gap: clamp(6px, 1vw, 8px);
+  gap: 8px;
   background-color: #d1fae5;
   color: #065f46;
-  padding: clamp(6px, 1vw, 8px) clamp(10px, 1.5vw, 12px);
+  padding: 8px 12px;
   border-radius: 20px;
-  font-size: clamp(11px, 1.6vw, 13px);
+  font-size: 13px;
   font-weight: 500;
-  margin-bottom: clamp(12px, 2vw, 16px);
+  margin-bottom: 16px;
 }
 
 .clear-badge {
@@ -258,23 +259,17 @@
   transition: color 0.2s ease;
 }
 
-.clear-badge svg {
-  width: clamp(14px, 2vw, 16px);
-  height: clamp(14px, 2vw, 16px);
-}
-
 .clear-badge:hover {
   color: #047857;
 }
 
-.washer-table-container {
+.company-table-container {
   width: 100%;
   padding: 0px;
   background-color: transparent;
-  overflow-x: auto;
 }
 
-.washer-table {
+.company-table {
   width: 100%;
   background-color: transparent;
   border-radius: 10px 10px 0px 0px;
@@ -282,17 +277,16 @@
   box-shadow: none;
   border-collapse: separate;
   border-spacing: 0;
-  min-width: 600px;
 }
 
-.washer-table thead {
+.company-table thead {
   background-color: rgba(233, 236, 241, 1);
 }
 
-.washer-table thead th {
-  padding: clamp(12px, 2vw, 16px) clamp(8px, 1.5vw, 12px);
+.company-table thead th {
+  padding: 16px 24px;
   text-align: left;
-  font-size: clamp(12px, 1.8vw, 14px);
+  font-size: 14px;
   font-weight: 600;
   font-family: "Plus Jakarta Sans", sans-serif;
   color: rgb(31, 32, 34);
@@ -304,45 +298,43 @@
 .header-with-icon {
   display: flex;
   align-items: center;
-  gap: clamp(2px, 0.5vw, 4px);
+  gap: 4px;
 }
 
 .header-with-icon.washer {
-  margin-left: clamp(20px, 4vw, 46px);
+  margin-left: 46px;
 }
 
 .sort-icon-left {
   color: rgb(12, 13, 14);
   flex-shrink: 0;
-  width: clamp(12px, 1.8vw, 14px);
-  height: clamp(12px, 1.8vw, 14px);
 }
 
-.washer-table tbody tr.washer-row {
+.company-table tbody tr.company-row {
   border-bottom: 1px solid #e5e7eb;
   transition: background-color 0.2s;
   background-color: white;
 }
 
-.washer-table tbody tr.washer-row:hover {
+.company-table tbody tr.company-row:hover {
   background-color: #fafafa;
 }
 
-.washer-table tbody td {
-  padding: clamp(12px, 3vw, 24px);
+.company-table tbody td {
+  padding: 24px;
   font-weight: 700;
   color: rgba(65, 68, 73, 1);
-  font-size: clamp(12px, 1.8vw, 14px);
+  font-size: 14px;
   font-family: "Plus Jakarta Sans", sans-serif;
   line-height: 20px;
   letter-spacing: -0.5px;
   border-bottom: 0.4px solid rgba(185, 194, 209, 1);
 }
 
-.washer-name-cell {
+.company-name-cell {
   display: flex;
   align-items: center;
-  gap: clamp(8px, 1.5vw, 12px);
+  gap: 12px;
 }
 
 .expand-btn {
@@ -355,34 +347,27 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  width: clamp(16px, 2.5vw, 20px);
-  height: clamp(16px, 2.5vw, 20px);
-  flex-shrink: 0;
-}
-
-.expand-btn svg {
-  width: clamp(16px, 2.5vw, 18px);
-  height: clamp(16px, 2.5vw, 18px);
+  width: 20px;
+  height: 20px;
 }
 
 .expand-btn:hover {
   color: #1a1a1a;
 }
 
-.washer-icon {
-  width: clamp(16px, 2.5vw, 20px);
-  height: clamp(16px, 2.5vw, 20px);
+.company-icon {
+  width: 20px;
+  height: 20px;
   object-fit: contain;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
 }
 
-.washer-name {
+.company-name {
   font-weight: 600;
   color: rgba(65, 68, 73, 1);
-  font-size: clamp(12px, 1.8vw, 14px);
+  font-size: 14px;
   font-family: "Plus Jakarta Sans", sans-serif;
   line-height: 20px;
   letter-spacing: -0.5px;
@@ -397,34 +382,31 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
-.wash-details-container {
-  padding: clamp(8px, 1.5vw, 12px) clamp(20px, 5vw, 60px);
+.service-details-container {
+  padding: 2px 60px;
   background-color: #f8f9fa;
-  overflow-x: auto;
 }
 
-.wash-details-header {
+.service-details-header {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: clamp(12px, 2vw, 20px);
-  padding: clamp(12px, 2vw, 16px) clamp(12px, 2vw, 20px);
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 20px;
+  padding: 16px 20px;
   background-color: #e9ecef;
   font-weight: 600;
-  font-size: clamp(12px, 1.8vw, 14px);
+  font-size: 14px;
   color: rgb(31, 32, 34);
   border-bottom: 1px solid #dee2e6;
-  min-width: 500px;
 }
 
-.wash-detail-row {
+.service-detail-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: clamp(12px, 2vw, 20px);
-  padding: clamp(10px, 1.5vw, 12px) clamp(12px, 2vw, 20px);
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 20px;
+  padding: 12px 20px;
   background-color: white;
   border-bottom: 1px solid #e9ecef;
-  font-size: clamp(12px, 1.8vw, 14px);
-  min-width: 500px;
+  font-size: 14px;
 }
 
 .detail-cell {
@@ -432,10 +414,10 @@
   align-items: center;
 }
 
-.detail-cell.service {
+.detail-cell.item {
   color: rgb(22, 24, 26);
   font-weight: 500;
-  font-size: clamp(12px, 1.8vw, 14px);
+  font-size: 14px;
   font-family: "Plus Jakarta Sans", sans-serif;
   line-height: 18px;
   letter-spacing: -0.5px;
@@ -444,124 +426,180 @@
 .detail-cell.quantity {
   color: rgb(22, 24, 26);
   font-weight: 500;
-  font-size: clamp(12px, 1.8vw, 14px);
+  font-size: 14px;
   font-family: "Plus Jakarta Sans", sans-serif;
   line-height: 18px;
   letter-spacing: -0.5px;
   text-align: center;
-  justify-content: center;
-}
-
-.detail-cell.worker-earning {
-  color: rgba(42, 168, 102, 1);
-  font-weight: 500;
-  font-size: clamp(12px, 1.8vw, 14px);
-  font-family: "Plus Jakarta Sans", sans-serif;
-  line-height: 18px;
-  letter-spacing: -0.5px;
 }
 
 .detail-cell.company-earning {
-  color: rgba(13, 110, 253, 1);
+  color: rgb(10, 83, 21);
   font-weight: 500;
-  font-size: clamp(12px, 1.8vw, 14px);
+  font-size: 14px;
   font-family: "Plus Jakarta Sans", sans-serif;
   line-height: 18px;
   letter-spacing: -0.5px;
 }
 
-.no-washers {
+.no-companies {
   text-align: center;
-  padding: clamp(30px, 5vw, 40px);
+  padding: 40px;
   color: #6b7280;
   background-color: white;
-  font-size: clamp(12px, 1.8vw, 14px);
 }
 
 .loading-container {
   text-align: center;
-  padding: clamp(30px, 5vw, 40px);
+  padding: 40px;
   background: white;
-  border-radius: clamp(12px, 2vw, 16px);
+  border-radius: 16px;
   color: #6b7280;
-  font-size: clamp(14px, 2vw, 16px);
+  font-size: 16px;
 }
 
-.washer-header {
-  margin-bottom: clamp(12px, 2vw, 16px);
+.company-date-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-/* Mobile Specific Adjustments */
+.company-date {
+  font-weight: 600;
+  color: rgba(65, 68, 73, 1);
+  font-size: 14px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  line-height: 20px;
+  letter-spacing: -0.5px;
+}
+
+@media (max-width: 1200px) {
+  .service-details-header,
+  .service-detail-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+}
+
 @media (max-width: 768px) {
-  .washer-table {
-    min-width: 100%;
+  .account-overview {
+    background-color: white;
+  }
+
+  .transaction-section {
+    padding: 16px;
+    background-color: white;
+  }
+
+  .company-header {
+    margin-bottom: 16px;
+  }
+
+  .company-header h1 {
+    font-size: 16px;
+    color: #075c40;
+  }
+
+  .search-container {
+    padding: 0;
+    margin-bottom: 16px;
+    margin-top: 0;
+    gap: 8px;
+  }
+
+  .search-input-wrapper {
+    max-width: 100%;
+  }
+
+  .search-inputs {
+    font-size: 14px;
+    padding: 10px 16px 10px 44px;
+    border-radius: 8px;
+  }
+
+  .filter-button {
+    min-width: 42px;
+    height: 42px;
+    padding: 10px;
+  }
+
+  .company-table-container {
+    padding: 0;
+    overflow-x: auto;
+  }
+
+  .company-table {
+    border-radius: 8px;
+  }
+
+  .company-table thead th {
+    padding: 12px 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .header-with-icon.washer {
+    margin-left: 32px;
+  }
+
+  .company-table tbody td {
+    padding: 12px 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .company-name-cell,
+  .company-date-cell {
+    gap: 8px;
+  }
+
+  .expand-btn {
+    width: 16px;
+    height: 16px;
+  }
+
+  .company-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .company-name,
+  .company-date {
+    font-size: 11px;
+  }
+
+  .service-details-container {
+    padding: 8px 16px;
+  }
+
+  .service-details-header,
+  .service-detail-row {
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+
+  .detail-cell.item,
+  .detail-cell.quantity,
+  .detail-cell.company-earning {
+    font-size: 11px;
   }
 
   .calendar-dropdown {
     right: 0;
     left: auto;
     width: calc(100vw - 32px);
-    max-width: 320px;
-  }
-
-  .wash-details-header,
-  .wash-detail-row {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
     min-width: auto;
+    max-width: 400px;
   }
 
-  .detail-cell.service,
-  .detail-cell.worker-earning {
-    grid-column: span 1;
+  .date-filter-badge {
+    font-size: 11px;
+    padding: 6px 10px;
   }
 
-  .detail-cell.quantity,
-  .detail-cell.company-earning {
-    grid-column: span 1;
-  }
-
-  .header-with-icon.washer {
-    margin-left: 0;
-  }
-
-  .search-input-wrapper {
-    max-width: 100%;
-  }
-}
-
-/* Very Small Mobile */
-@media (max-width: 480px) {
-  .washer-page {
-    margin-top: -10px;
-  }
-
-  .search-container {
-    padding: 8px;
-    gap: 8px;
-  }
-
-  .wash-details-container {
-    padding: 8px 12px;
-  }
-
-  .wash-details-header,
-  .wash-detail-row {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 10px 12px;
-  }
-
-  .detail-cell.quantity {
-    justify-content: flex-start;
-  }
-}
-
-/* Tablet Adjustments */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .wash-details-header,
-  .wash-detail-row {
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 15px;
+  .no-companies {
+    padding: 24px 12px;
+    font-size: 13px;
   }
 }

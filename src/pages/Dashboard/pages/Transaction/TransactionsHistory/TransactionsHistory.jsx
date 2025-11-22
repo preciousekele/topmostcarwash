@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Car, Calendar as CalendarIcon, X } from "lucide-react";
 import Receipt from "./Receipt";
 import "./TransactionsHistory.css";
+import { getCarWashRecords } from "../../../../../api/createRecordApi";
 
 const TransactionsHistory = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,118 +20,73 @@ const TransactionsHistory = () => {
   const calendarRef = useRef(null);
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const token = localStorage.getItem("token");
-
-        // Replace this URL with your actual car wash API endpoint
-        // const response = await fetch('YOUR_API_ENDPOINT/carwash-history', {
-        //   method: 'GET',
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`,
-        //     'Content-Type': 'application/json',
-        //   },
-        // });
-
-        // if (!response.ok) {
-        //   throw new Error('Failed to fetch transaction history');
-        // }
-
-        // const data = await response.json();
-
-        // Mock data for demonstration - replace with actual API data
-        const mockData = [
-          {
-            id: 1,
-            vehicleType: "Car",
-            plateNumber: "ABC-123",
-            washerName: "Abbey",
-            items: [
-              { name: "Basic", price: 1200 },
-              { name: "Roof", price: 800 },
-            ],
-            paymentMethod: "cash",
-            createdAt: "2024-01-15T14:30:00Z",
-            totalAmount: 2000,
-            status: "completed",
-          },
-          {
-            id: 2,
-            vehicleType: "Jeep",
-            plateNumber: "XYZ-456",
-            washerName: "Shako",
-            items: [
-              { name: "Basic", price: 1500 },
-              { name: "Roof", price: 800 },
-              { name: "Boot", price: 800 },
-            ],
-            paymentMethod: "transfer",
-            createdAt: "2024-01-14T10:15:00Z",
-            totalAmount: 3100,
-            status: "completed",
-          },
-          {
-            id: 3,
-            vehicleType: "Car",
-            plateNumber: "DEF-789",
-            washerName: "Ayo",
-            items: [
-              { name: "Basic", price: 1200 },
-              { name: "Floor", price: 800 },
-            ],
-            paymentMethod: "cash",
-            createdAt: "2024-01-13T16:45:00Z",
-            totalAmount: 2000,
-            status: "completed",
-          },
-          {
-            id: 4,
-            vehicleType: "Car",
-            plateNumber: "GHI-321",
-            washerName: "David",
-            items: [
-              { name: "Basic", price: 1200 },
-              { name: "Roof", price: 800 },
-            ],
-            paymentMethod: "transfer",
-            createdAt: "2024-01-12T09:20:00Z",
-            totalAmount: 2000,
-            status: "completed",
-          },
-        ];
-
-        const transformedTransactions = mockData.map((transaction) => ({
-          id: transaction.id,
-          type: "carwash",
-          title: transaction.vehicleType,
-          washerName: transaction.washerName,
-          date: formatDate(transaction.createdAt),
-          amount: `₦${transaction.totalAmount.toLocaleString()}`,
-          status:
-            transaction.status === "pending"
-              ? "Pending"
-              : transaction.status === "completed"
-              ? "Success"
-              : "Failed",
-          plateNumber: transaction.plateNumber,
-          items: transaction.items,
-          paymentMethod:
-            transaction.paymentMethod === "cash" ? "Cash" : "Transfer",
-          createdAt: transaction.createdAt,
-          totalAmount: transaction.totalAmount,
-        }));
-
-        setTransactions(transformedTransactions);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-        console.error("Error fetching transactions:", err);
-      }
-    };
-
     fetchTransactions();
   }, []);
+
+  const fetchTransactions = async (dateString = null) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Use the date string directly if provided
+      const filters = dateString ? { date: dateString } : {};
+      
+      console.log('Fetching with filters:', filters); // Debug log
+      
+      const response = await getCarWashRecords(filters);
+
+      console.log('API Response:', response); // Debug log
+
+      if (response.success && response.data) {
+        const transformedTransactions = response.data.map((record) => {
+          // Extract unique washer names
+          const washerNames = [...new Set(record.washers.map(w => w.name))].join(', ');
+          
+          // Calculate vehicle type from service items
+          const vehicleType = determineVehicleType(record.washedItems);
+
+          return {
+            id: record.id,
+            type: "carwash",
+            title: vehicleType,
+            washerName: washerNames,
+            date: formatDate(record.washDate),
+            amount: `₦${record.totalAmount.toLocaleString()}`,
+            status: "Success",
+            plateNumber: record.carNumber,
+            items: record.washedItems.map(item => ({
+              name: item.serviceItem?.name || 'Unknown',
+              price: item.serviceItem?.price || 0
+            })),
+            paymentMethod: record.paymentMethod === "cash" ? "Cash" : "Transfer",
+            createdAt: record.washDate,
+            totalAmount: record.totalAmount,
+          };
+        });
+
+        console.log('Transformed transactions:', transformedTransactions.length); // Debug log
+        setTransactions(transformedTransactions);
+      } else {
+        setTransactions([]);
+      }
+      setLoading(false);
+    } catch (err) {
+      setError(err.message || "Failed to fetch transactions");
+      setLoading(false);
+      console.error("Error fetching transactions:", err);
+    }
+  };
+
+  // Determine vehicle type based on service items
+  const determineVehicleType = (washedItems) => {
+    const itemNames = washedItems.map(item => item.serviceItem.name.toLowerCase());
+    
+    if (itemNames.some(name => name.includes('jeep'))) return 'Jeep';
+    if (itemNames.some(name => name.includes('bus'))) return 'Bus';
+    if (itemNames.some(name => name.includes('pickup') || name.includes('pick-up'))) return 'Pick-up';
+    if (itemNames.some(name => name.includes('rug'))) return 'Rug';
+    return 'Car'; // Default to Car
+  };
 
   // Close calendar when clicking outside
   useEffect(() => {
@@ -153,18 +109,8 @@ const TransactionsHistory = () => {
     const date = new Date(dateString);
 
     const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
     ];
 
     const month = months[date.getMonth()];
@@ -174,14 +120,10 @@ const TransactionsHistory = () => {
     const getOrdinalSuffix = (day) => {
       if (day > 3 && day < 21) return "th";
       switch (day % 10) {
-        case 1:
-          return "st";
-        case 2:
-          return "nd";
-        case 3:
-          return "rd";
-        default:
-          return "th";
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
       }
     };
 
@@ -225,25 +167,35 @@ const TransactionsHistory = () => {
   };
 
   const handleDateClick = (date) => {
-    if (
-      !selectedDateRange.start ||
-      (selectedDateRange.start && selectedDateRange.end)
-    ) {
+    // Format date to YYYY-MM-DD using local timezone (not UTC)
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day}`;
+    
+    console.log('Date clicked (local):', dateString); // Debug log
+    console.log('Date object:', date); // Debug log
+    
+    if (!selectedDateRange.start || (selectedDateRange.start && selectedDateRange.end)) {
       // Start new selection
       setSelectedDateRange({ start: date, end: null });
+      fetchTransactions(dateString);
     } else {
-      // Complete the range
-      if (date < selectedDateRange.start) {
-        setSelectedDateRange({ start: date, end: selectedDateRange.start });
-      } else {
-        setSelectedDateRange({ start: selectedDateRange.start, end: date });
-      }
+      // Complete the range - for now just use single date
+      const newDate = date < selectedDateRange.start ? date : date;
+      setSelectedDateRange({ 
+        start: date < selectedDateRange.start ? date : selectedDateRange.start, 
+        end: date < selectedDateRange.start ? selectedDateRange.start : date 
+      });
+      fetchTransactions(dateString);
     }
   };
 
   const clearDateFilter = () => {
+    console.log('Clearing date filter'); // Debug log
     setSelectedDateRange({ start: null, end: null });
     setShowCalendar(false);
+    fetchTransactions(); // Fetch all transactions without date filter
   };
 
   const getDaysInMonth = (date) => {
@@ -267,13 +219,8 @@ const TransactionsHistory = () => {
 
   const isDateSelected = (date) => {
     if (!selectedDateRange.start) return false;
-    if (date.toDateString() === selectedDateRange.start.toDateString())
-      return true;
-    if (
-      selectedDateRange.end &&
-      date.toDateString() === selectedDateRange.end.toDateString()
-    )
-      return true;
+    if (date.toDateString() === selectedDateRange.start.toDateString()) return true;
+    if (selectedDateRange.end && date.toDateString() === selectedDateRange.end.toDateString()) return true;
     return false;
   };
 
@@ -287,18 +234,8 @@ const TransactionsHistory = () => {
     const { daysInMonth, startingDayOfWeek } = getDaysInMonth(currentMonth);
     const days = [];
     const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December",
     ];
 
     // Empty cells for days before month starts
@@ -308,20 +245,14 @@ const TransactionsHistory = () => {
 
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(
-        currentMonth.getFullYear(),
-        currentMonth.getMonth(),
-        day
-      );
+      const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
       const isInRange = isDateInRange(date);
       const isSelected = isDateSelected(date);
 
       days.push(
         <div
           key={day}
-          className={`calendar-day ${isInRange ? "in-range" : ""} ${
-            isSelected ? "selected" : ""
-          }`}
+          className={`calendar-day ${isInRange ? "in-range" : ""} ${isSelected ? "selected" : ""}`}
           onClick={() => handleDateClick(date)}
         >
           {day}
@@ -334,10 +265,7 @@ const TransactionsHistory = () => {
         <div className="calendar-header">
           <button className="calendar-nav" onClick={() => changeMonth(-1)}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
-                fill="currentColor"
-              />
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor" />
             </svg>
           </button>
           <span className="calendar-month">
@@ -345,10 +273,7 @@ const TransactionsHistory = () => {
           </span>
           <button className="calendar-nav" onClick={() => changeMonth(1)}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-                fill="currentColor"
-              />
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor" />
             </svg>
           </button>
         </div>
@@ -399,12 +324,8 @@ const TransactionsHistory = () => {
     transactions.filter(
       (transaction) =>
         transaction.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        transaction.plateNumber
-          ?.toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        transaction.washerName
-          ?.toLowerCase()
-          .includes(searchQuery.toLowerCase())
+        transaction.plateNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        transaction.washerName?.toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
 
@@ -412,10 +333,9 @@ const TransactionsHistory = () => {
     return (
       <div className="transaction-page">
         <div className="transaction-header">
-          <h1>Transactions</h1>
         </div>
         <div className="loading-container">
-          <p>Loading transactions...</p>
+          <div className="loading-spinner"></div>
         </div>
       </div>
     );
@@ -425,11 +345,10 @@ const TransactionsHistory = () => {
     return (
       <div className="transaction-page">
         <div className="transaction-header">
-          <h1>Transactions</h1>
         </div>
         <div className="error-container">
           <p>Error loading transactions: {error}</p>
-          <button onClick={() => window.location.reload()}>Retry</button>
+          <button onClick={() => fetchTransactions()}>Retry</button>
         </div>
       </div>
     );
@@ -438,18 +357,12 @@ const TransactionsHistory = () => {
   return (
     <div className="transaction-page">
       <div className="transaction-header">
-        <h1>Transactions</h1>
+        {/* <h1>Transactions</h1> */}
       </div>
 
-      <div className="search-container">
+      <div className="searchh-container">
         <div className="search-input-wrapper">
-          <svg
-            className="search-icon"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
+          <svg className="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path
               d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
               fill="currentColor"
@@ -457,17 +370,14 @@ const TransactionsHistory = () => {
           </svg>
           <input
             type="text"
-            placeholder="Search by vehicle type, plate number, or washer"
+            placeholder="Search by plate number, washer..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="search-inputs"
           />
         </div>
         <div className="filter-button-wrapper">
-          <button
-            className={`filter-button ${showCalendar ? "active" : ""}`}
-            onClick={toggleCalendar}
-          >
+          <button className={`filter-button ${showCalendar ? "active" : ""}`} onClick={toggleCalendar}>
             <CalendarIcon size={20} />
           </button>
           {showCalendar && renderCalendar()}
@@ -478,8 +388,7 @@ const TransactionsHistory = () => {
         <div className="date-filter-badge">
           <span>
             {selectedDateRange.start?.toLocaleDateString()}
-            {selectedDateRange.end &&
-              ` - ${selectedDateRange.end.toLocaleDateString()}`}
+            {selectedDateRange.end && ` - ${selectedDateRange.end.toLocaleDateString()}`}
           </span>
           <button onClick={clearDateFilter} className="clear-badge">
             <X size={16} />
@@ -504,14 +413,10 @@ const TransactionsHistory = () => {
               <div className="transactionss">
                 <div className="transaction-details">
                   <h3 className="transaction-title">{transaction.title}</h3>
-                  <h3 className="transaction-plate">
-                    {transaction.plateNumber}
-                  </h3>
+                  <h3 className="transaction-plate">{transaction.plateNumber}</h3>
                 </div>
                 <div className="transaction-detailss">
-                  <p className="transaction-subtitle">
-                    {transaction.washerName}
-                  </p>
+                  <p className="transaction-subtitle">{transaction.washerName}</p>
                   <p className="transaction-date">{transaction.date}</p>
                 </div>
               </div>
@@ -526,10 +431,7 @@ const TransactionsHistory = () => {
       {showReceipt && (
         <div className="modal-overlay" onClick={handleOverlayClick}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <Receipt
-              transaction={selectedTransaction}
-              onBack={handleBackToTransactions}
-            />
+            <Receipt transaction={selectedTransaction} onBack={handleBackToTransactions} />
           </div>
         </div>
       )}

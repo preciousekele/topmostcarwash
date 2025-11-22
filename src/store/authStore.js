@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 export const useAuthStore = create(
   persist(
@@ -11,49 +11,103 @@ export const useAuthStore = create(
       isLoading: false,
       error: null,
 
-      // Actions
-      setUser: (user) => set({ user, isAuthenticated: true }),
-      
-      setToken: (token) => set({ token }),
-      
-      setLoading: (isLoading) => set({ isLoading }),
-      
-      setError: (error) => set({ error }),
-      
-      login: (userData, token) => {
+      // Set user
+      setUser: (user) =>
         set({
-          user: userData,
+          user,
+          isAuthenticated: !!user,
+        }),
+
+      // Set token
+      setToken: (token) => {
+        // Store token in localStorage for axios interceptor
+        if (token) {
+          localStorage.setItem('token', token);
+        } else {
+          localStorage.removeItem('token');
+        }
+        
+        set({
           token,
-          isAuthenticated: true,
-          error: null,
-          isLoading: false
+          isAuthenticated: !!token,
         });
       },
-      
-      logout: () => {
+
+      // Set loading state
+      setLoading: (isLoading) =>
+        set({ isLoading }),
+
+      // Set error
+      setError: (error) =>
+        set({ error }),
+
+      // Clear error
+      clearError: () =>
+        set({ error: null }),
+
+      // Clear all auth data
+      clearAuth: () => {
+        // Clear localStorage tokens
+        localStorage.removeItem('token');
+        localStorage.removeItem('auth-storage');
+        
+        // Reset state
         set({
           user: null,
           token: null,
           isAuthenticated: false,
+          isLoading: false,
           error: null,
-          isLoading: false
         });
       },
-      
-      clearError: () => set({ error: null }),
-      
-      // Getters
-      getUser: () => get().user,
-      getToken: () => get().token,
-      isLoggedIn: () => get().isAuthenticated
+
+      // Initialize auth from localStorage token
+      initializeAuth: () => {
+        const token = localStorage.getItem('token');
+        const storedData = localStorage.getItem('auth-storage');
+        
+        if (token && storedData) {
+          try {
+            const parsed = JSON.parse(storedData);
+            set({
+              token,
+              user: parsed.state?.user || null,
+              isAuthenticated: true,
+            });
+          } catch (error) {
+            console.error('Failed to parse stored auth data:', error);
+            get().clearAuth();
+          }
+        }
+      },
+
+      // Login action
+      login: (user, token) => {
+        localStorage.setItem('token', token);
+        set({
+          user,
+          token,
+          isAuthenticated: true,
+          isLoading: false,
+          error: null,
+        });
+      },
+
+      // Logout action
+      logout: () => {
+        get().clearAuth();
+      },
     }),
     {
-      name: 'auth-storage', // localStorage key
+      name: 'auth-storage',
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         user: state.user,
         token: state.token,
-        isAuthenticated: state.isAuthenticated
-      })
+        isAuthenticated: state.isAuthenticated,
+      }),
     }
   )
 );
+
+export default useAuthStore;

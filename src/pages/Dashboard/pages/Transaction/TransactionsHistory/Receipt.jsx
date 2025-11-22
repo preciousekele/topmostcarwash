@@ -41,7 +41,9 @@ const Receipt = ({ transaction, onBack }) => {
               {transaction.items && transaction.items.map((item, index) => (
                 <div key={index} className="receipt-item-row">
                   <span className="receipt-item-name">{item.name}</span>
-                  <span className="receipt-item-price">₦{item.price.toLocaleString()}</span>
+                  <span className="receipt-item-price">
+                    ₦{(item.price || 0).toLocaleString()}
+                  </span>
                 </div>
               ))}
             </div>

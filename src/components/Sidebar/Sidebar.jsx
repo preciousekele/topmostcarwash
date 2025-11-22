@@ -25,7 +25,7 @@ const SIDEBAR_ITEMS = [
   { name: "Transactions", image: MENU_IMAGES.transactions, href: "/dashboard/transactions" },
   { name: "Staff Payment", image: MENU_IMAGES.staffPayment, href: "/dashboard/staffpayment" },
   { name: "Company", image: MENU_IMAGES.investment, href: "/dashboard/company" },
-  { name: "Daily and Monthly Earnings", image: MENU_IMAGES.savings, href: "/dashboard/savings" },
+  // { name: "Daily and Monthly Earnings", image: MENU_IMAGES.savings, href: "/dashboard/savings" },
   // { name: "Card Management", image: MENU_IMAGES.cardManagement, href: "/dashboard/cardmanagement" },
 ];
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Smartphone, CreditCard, Send, TrendingUp, Car, CarFront, Bus } from "lucide-react";
+import { Smartphone, CreditCard, Send, TrendingUp, Car, CarFront, Bus, Sheet } from "lucide-react";
 import "./Services.css";
 
 const Services = () => {
@@ -11,6 +11,7 @@ const Services = () => {
     { id: "jeep", label: "Jeep", icon: Car, color: "blue" },
     { id: "pick-up", label: "Pick-Up", icon: CreditCard, color: "orange" },
     { id: "bus", label: "Bus", icon: Bus, color: "teal" },
+    { id: "rug", label: "Rug", icon: Sheet, color: "teal" },
   ];
 
   const handleServiceClick = (serviceId) => {
@@ -22,7 +23,9 @@ const Services = () => {
       navigate("/dashboard/entry/pick-up");
     } else if (serviceId === "bus") {
       navigate("/dashboard/entry/bus");
-    } else {
+    } else if (serviceId === "rug") {
+      navigate("/dashboard/entry/rug");
+    }else {
       console.log(`${serviceId} clicked`);
     }
   };

@@ -75,6 +75,7 @@ const Login = () => {
 
     try {
       await loginMutation.mutateAsync(formData);
+      // Navigation will happen after successful login
       navigate('/dashboard');
     } catch (err) {
       // Error is handled by the mutation's onError
@@ -87,7 +88,6 @@ const Login = () => {
       <div className="left-section">
         <img src={bgImg} alt="background" className="bg-image" />
         <div className="green-overlay"></div>
-        {/* <img src={padlock} alt="padlock" className="padlock-image" /> */}
       </div>
 
       {/* Right Section with Login Form */}
@@ -96,7 +96,7 @@ const Login = () => {
           {/* Logo - Separate from login content */}
           <div className="logo">
             <div className="logo-text">
-                  <h1 className="company-name-title">Top-Most Carwash</h1>
+              <h1 className="company-name-title">Top-Most Carwash</h1>
             </div>
           </div>
 
@@ -108,8 +108,6 @@ const Login = () => {
             </div>
 
             <form className="login-form" onSubmit={handleSubmit}>
-             
-
               <div className="form-group">
                 <label htmlFor="email" className="form-label">
                   Email Address
@@ -159,19 +157,13 @@ const Login = () => {
                 )}
               </div>
 
-              {/* Bottom row with error message on left and forgot password on right */}
+              {/* Bottom row with error message */}
               <div className="bottom-row">
-                 {error && (
-                <div className="error-message">
-                  {error}
-                </div>
-              )}
-                <div className="password-error">
-                  {formErrors.password && 'Password Incorrect'}
-                </div>
-                {/* <a href="#" className="forgot-password">
-                  Forget Password?
-                </a> */}
+                {error && (
+                  <div className="error-message">
+                    {error}
+                  </div>
+                )}
               </div>
 
               <button
