@@ -97,6 +97,30 @@ export const useAuthStore = create(
       logout: () => {
         get().clearAuth();
       },
+
+      // Helper to get branch info
+      getBranch: () => {
+        const state = get();
+        return state.user?.branch || null;
+      },
+
+      // Helper to get branch ID
+      getBranchId: () => {
+        const state = get();
+        return state.user?.branchId || null;
+      },
+
+      // Helper to get branch name
+      getBranchName: () => {
+        const state = get();
+        return state.user?.branch?.name || '';
+      },
+
+      // Helper to get branch code
+      getBranchCode: () => {
+        const state = get();
+        return state.user?.branch?.code || '';
+      },
     }),
     {
       name: 'auth-storage',

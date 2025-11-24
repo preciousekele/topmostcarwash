@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import "./Car.css";
 import { useNavigate } from "react-router-dom";
 import { useCarWash } from "../../../../../hooks/useCarWash";
+import toast, { Toaster } from "react-hot-toast";
 
 const Car = () => {
   const [plateNumber, setPlateNumber] = useState("");
@@ -46,7 +47,12 @@ const Car = () => {
   };
 
   const handlePay = () => {
-    if (plateNumber && selectedItems.length > 0 && washerName && paymentMethod) {
+    if (
+      plateNumber &&
+      selectedItems.length > 0 &&
+      washerName &&
+      paymentMethod
+    ) {
       setShowModal(true);
     }
   };
@@ -58,12 +64,12 @@ const Car = () => {
       const bookingData = {
         plateNumber: plateNumber.trim(),
         washer: washerName.trim(),
-        items: selectedItems.map(item => ({
+        items: selectedItems.map((item) => ({
           name: item.name,
-          price: item.price
+          price: item.price,
         })),
         paymentMethod: paymentMethod,
-        totalAmount: calculateTotal()
+        totalAmount: calculateTotal(),
       };
 
       const result = await createBooking(bookingData);
@@ -74,18 +80,27 @@ const Car = () => {
         setSelectedItems([]);
         setWasherName("");
         setPaymentMethod("");
-        
+
         // Show success message
-        alert(result.message || "Booking successful!");
-        
+        toast.success(result.message || "Booking created successfully!", {
+          duration: 4000,
+          position: "top-center",
+        });
+
         // Optional: Navigate to a different page
         // navigate("/userdashboard/home");
       } else {
-        alert(result.message || "Booking failed. Please try again.");
+        toast.error(result.message || "Booking failed. Please try again.", {
+          duration: 5000,
+          position: "top-right",
+        });
       }
     } catch (error) {
       console.error("Error processing booking:", error);
-      alert("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.", {
+        duration: 5000,
+        position: "top-right",
+      });
     }
   };
 
@@ -166,7 +181,9 @@ const Car = () => {
         {selectedItems.length > 0 && (
           <div className="total-display">
             <span className="total-label">Subtotal</span>
-            <span className="total-amount">₦{calculateTotal().toLocaleString()}</span>
+            <span className="total-amount">
+              ₦{calculateTotal().toLocaleString()}
+            </span>
           </div>
         )}
 

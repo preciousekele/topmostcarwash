@@ -1,102 +1,165 @@
-import { api } from './index';
+import axios from 'axios';
 
-// Mock data for testing
-const MOCK_USERS = [
-  {
-    id: 1,
-    email: 'preshekele@gmail.com',
-    password: 'Presh123!',
-    name: 'Admin User',
-    role: 'admin'
+// Create axios instance
+const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  headers: {
+    'Content-Type': 'application/json',
   },
-  {
-    id: 2,
-    email: 'test@example.com',
-    password: 'test123',
-    name: 'Test User',
-    role: 'user'
-  }
-];
+  withCredentials: true,
+});
 
-// Mock API delay to simulate network request
-const mockDelay = (ms = 1000) => new Promise(resolve => setTimeout(resolve, ms));
-
-export const authAPI = {
-  login: async (credentials) => {
-    // Simulate network delay
-    await mockDelay(1500);
+// Request interceptor to add token
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
     
-    const { email, password } = credentials;
-    
-    // Find user in mock data
-    const user = MOCK_USERS.find(u => u.email === email && u.password === password);
-    
-    if (!user) {
-      throw new Error('Invalid email or password');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     
-    // Return mock success response
-    return {
-      success: true,
-      data: {
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role
-        },
-        token: `mock_token_${user.id}_${Date.now()}`
-      },
-      message: 'Login successful'
-    };
+    return config;
   },
-  
-  register: async (userData) => {
-    await mockDelay(1000);
-    // Mock registration - always succeeds
-    return {
-      success: true,
-      data: {
-        user: {
-          id: Date.now(),
-          ...userData
-        }
-      },
-      message: 'Registration successful'
-    };
-  },
-  
-  logout: async () => {
-    await mockDelay(500);
-    return {
-      success: true,
-      message: 'Logged out successfully'
-    };
-  },
-  
-  refreshToken: async () => {
-    await mockDelay(500);
-    return {
-      success: true,
-      data: {
-        token: `refreshed_token_${Date.now()}`
-      }
-    };
-  },
-  
-  forgotPassword: async (email) => {
-    await mockDelay(1000);
-    return {
-      success: true,
-      message: 'Password reset email sent'
-    };
-  },
-  
-  resetPassword: async (token, password) => {
-    await mockDelay(1000);
-    return {
-      success: true,
-      message: 'Password reset successful'
-    };
+  (error) => {
+    return Promise.reject(error);
   }
+);
+
+// Response interceptor to handle errors
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token expired or invalid
+      localStorage.removeItem('token');
+      localStorage.removeItem('auth-storage');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
+export const authAPI = {
+  /**
+   * Login user
+   * @param {Object} credentials - { email, password }
+   * @returns {Promise} API response
+   */
+  login: async (credentials) => {
+    try {
+      const response = await apiClient.post('/auth/login', credentials);
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || 'Login failed. Please try again.';
+      throw new Error(message);
+    }
+  },
+
+  /**
+   * Register new user
+   * @param {Object} userData - { email, password, name, role, branchId }
+   * @returns {Promise} API response
+   */
+  register: async (userData) => {
+    try {
+      const response = await apiClient.post('/auth/register', userData);
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || 'Registration failed. Please try again.';
+      throw new Error(message);
+    }
+  },
+
+  /**
+   * Logout user
+   * @returns {Promise} API response
+   */
+  logout: async () => {
+    try {
+      const response = await apiClient.post('/auth/logout');
+      return response.data;
+    } catch (error) {
+      // Continue with logout even if API call fails
+      console.error('Logout API error:', error);
+      return { success: true, message: 'Logged out' };
+    }
+  },
+
+  /**
+   * Get current user
+   * @returns {Promise} API response
+   */
+  getCurrentUser: async () => {
+    try {
+      const response = await apiClient.get('/auth/me');
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || 'Failed to fetch user data.';
+      throw new Error(message);
+    }
+  },
+
+  /**
+   * Change password
+   * @param {Object} passwords - { currentPassword, newPassword }
+   * @returns {Promise} API response
+   */
+  changePassword: async (passwords) => {
+    try {
+      const response = await apiClient.put('/auth/change-password', passwords);
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || 'Failed to change password.';
+      throw new Error(message);
+    }
+  },
+
+  /**
+   * Get available branches
+   * @returns {Promise} API response
+   */
+  getBranches: async () => {
+    try {
+      const response = await apiClient.get('/auth/branches');
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || 'Failed to fetch branches.';
+      throw new Error(message);
+    }
+  },
+
+  /**
+   * Forgot password
+   * @param {string} email
+   * @returns {Promise} API response
+   */
+  forgotPassword: async (email) => {
+    try {
+      const response = await apiClient.post('/auth/forgot-password', { email });
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || 'Failed to process request.';
+      throw new Error(message);
+    }
+  },
+
+  /**
+   * Reset password
+   * @param {Object} data - { token, newPassword }
+   * @returns {Promise} API response
+   */
+  resetPassword: async (data) => {
+    try {
+      const response = await apiClient.post('/auth/reset-password', data);
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || 'Failed to reset password.';
+      throw new Error(message);
+    }
+  },
 };
+
+// Export the axios instance for use in other API files
+export const api = apiClient;
+
+export default authAPI;

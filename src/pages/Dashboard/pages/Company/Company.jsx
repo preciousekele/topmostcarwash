@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ChevronDown, ChevronsUpDown, ChevronUp, Calendar as CalendarIcon, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Calendar as CalendarIcon } from "lucide-react";
 import "./Company.css";
 import Header from "../../../../components/Header/Header";
-import { getCompanySummary } from "../../../../api/createRecordApi";
+import { getCompanySummaryAllBranches } from "../../../../api/createRecordApi";
 
 const Company = () => {
   const [expandedRows, setExpandedRows] = useState({});
+  const [expandedBranches, setExpandedBranches] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(new Date());
@@ -15,7 +16,7 @@ const Company = () => {
   const [error, setError] = useState(null);
   const calendarRef = useRef(null);
 
-  // Format date to "22 November, 2025" format (without day name)
+  // Format date to "22 November, 2025" format
   const formatDateToShortFormat = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -46,7 +47,7 @@ const Company = () => {
     return dates;
   };
 
-  // Fetch company summary data for entire month
+  // Fetch company summary data for entire month (all branches)
   const fetchMonthlyData = async (month) => {
     try {
       setLoading(true);
@@ -60,30 +61,28 @@ const Company = () => {
         const dateString = formatDateForAPI(date);
         
         try {
-          const response = await getCompanySummary(dateString);
+          const response = await getCompanySummaryAllBranches(dateString);
           const responseData = response.data || response;
-          const summary = responseData.summary || {};
-          const itemsWashed = responseData.itemsWashed || [];
-          const responseDate = responseData.date;
 
-          if (summary && responseDate) {
-            const companyRecord = {
+          if (responseData && responseData.branches) {
+            const { branches, overallTotals, date: responseDate } = responseData;
+
+            // Create a record for this date with all branches
+            const dateRecord = {
               id: dateString,
               date: formatDateToShortFormat(dateString),
               rawDate: dateString,
-              totalEarnings: `₦${summary.totalEarnings?.toFixed(2) || '0.00'}`,
-              companyShare: `₦${summary.companyShare?.toFixed(2) || '0.00'}`,
-              items: itemsWashed.map(item => ({
-                item: item.itemName,
-                quantity: item.quantity,
-                companyEarning: `₦${item.companyEarning?.toFixed(2) || '0.00'}`,
-                companyEarningRaw: item.companyEarning || 0,
-              })),
-              totalEarningsRaw: summary.totalEarnings || 0,
-              companyShareRaw: summary.companyShare || 0,
+              totalEarnings: overallTotals.totalEarnings,
+              companyShare: overallTotals.companyShare,
+              branches: branches.map(branchData => ({
+                branch: branchData.branch,
+                totalEarnings: branchData.summary.totalEarnings,
+                companyShare: branchData.summary.companyShare,
+                items: branchData.itemsWashed
+              }))
             };
 
-            monthlyData.push(companyRecord);
+            monthlyData.push(dateRecord);
           }
         } catch (err) {
           console.log(`No data for ${dateString}`);
@@ -128,6 +127,14 @@ const Company = () => {
     setExpandedRows((prev) => ({
       ...prev,
       [id]: !prev[id],
+    }));
+  };
+
+  const toggleBranch = (dateId, branchId) => {
+    const key = `${dateId}-${branchId}`;
+    setExpandedBranches((prev) => ({
+      ...prev,
+      [key]: !prev[key],
     }));
   };
 
@@ -311,7 +318,7 @@ const Company = () => {
                 <tr>
                   <th>
                     <div className="header-with-icon washer">
-                      <span>Washer Name</span>
+                      <span>Date / Branch</span>
                     </div>
                   </th>
                   <th>
@@ -336,7 +343,8 @@ const Company = () => {
                 ) : (
                   filteredCompanies.map((company) => (
                     <React.Fragment key={company.id}>
-                      <tr className="company-row">
+                      {/* Date Row */}
+                      <tr className="company-row date-row">
                         <td>
                           <div className="company-date-cell">
                             <button
@@ -354,44 +362,72 @@ const Company = () => {
                             <span className="company-date">{company.date}</span>
                           </div>
                         </td>
-                        <td>{company.totalEarnings}</td>
-                        <td>{company.companyShare}</td>
+                        <td>₦{company.totalEarnings.toFixed(2)}</td>
+                        <td>₦{company.companyShare.toFixed(2)}</td>
                       </tr>
 
-                      {expandedRows[company.id] && (
-                        <tr className="expanded-row">
-                          <td colSpan="3">
-                            <div className="service-details-container">
-                              <div className="service-details-header">
-                                <div className="detail-cell item">Items Washed</div>
-                                <div className="detail-cell quantity">Quantity</div>
-                                <div className="detail-cell company-earning">Company Earning</div>
+                      {/* Branches Rows */}
+                      {expandedRows[company.id] && company.branches.map((branchData, idx) => (
+                        <React.Fragment key={`${company.id}-branch-${idx}`}>
+                          <tr className="company-row branch-row">
+                            <td>
+                              <div className="company-name-cell branch-name-cell">
+                                <button
+                                  className={`expand-btn ${
+                                    expandedBranches[`${company.id}-${branchData.branch.id}`] ? "expanded" : ""
+                                  }`}
+                                  onClick={() => toggleBranch(company.id, branchData.branch.id)}
+                                >
+                                  {expandedBranches[`${company.id}-${branchData.branch.id}`] ? (
+                                    <ChevronUp size={18} />
+                                  ) : (
+                                    <ChevronDown size={18} />
+                                  )}
+                                </button>
+                                <span className="branch-name-text">{branchData.branch.name}</span>
                               </div>
-                              {company.items && company.items.length > 0 ? (
-                                company.items.map((detail, idx) => (
-                                  <div key={idx} className="service-detail-row">
-                                    <div className="detail-cell item">
-                                      {detail.item}
-                                    </div>
-                                    <div className="detail-cell quantity">
-                                      {detail.quantity}
-                                    </div>
-                                    <div className="detail-cell company-earning">
-                                      {detail.companyEarning}
-                                    </div>
+                            </td>
+                            <td>₦{branchData.totalEarnings.toFixed(2)}</td>
+                            <td>₦{branchData.companyShare.toFixed(2)}</td>
+                          </tr>
+
+                          {/* Items for this branch */}
+                          {expandedBranches[`${company.id}-${branchData.branch.id}`] && (
+                            <tr className="expanded-row">
+                              <td colSpan="3">
+                                <div className="service-details-container">
+                                  <div className="service-details-header">
+                                    <div className="detail-cell item">Items Washed</div>
+                                    <div className="detail-cell quantity">Quantity</div>
+                                    <div className="detail-cell company-earning">Company Earning</div>
                                   </div>
-                                ))
-                              ) : (
-                                <div className="service-detail-row">
-                                  <div className="detail-cell" style={{gridColumn: '1 / -1', textAlign: 'center'}}>
-                                    No items found for this date
-                                  </div>
+                                  {branchData.items && branchData.items.length > 0 ? (
+                                    branchData.items.map((detail, itemIdx) => (
+                                      <div key={itemIdx} className="service-detail-row">
+                                        <div className="detail-cell item">
+                                          {detail.itemName}
+                                        </div>
+                                        <div className="detail-cell quantity">
+                                          {detail.quantity}
+                                        </div>
+                                        <div className="detail-cell company-earning">
+                                          ₦{detail.companyEarning.toFixed(2)}
+                                        </div>
+                                      </div>
+                                    ))
+                                  ) : (
+                                    <div className="service-detail-row">
+                                      <div className="detail-cell" style={{gridColumn: '1 / -1', textAlign: 'center'}}>
+                                        No items found for this branch
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      )}
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      ))}
                     </React.Fragment>
                   ))
                 )}

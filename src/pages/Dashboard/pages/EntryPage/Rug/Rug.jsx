@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import "./Rug.css";
 import { useNavigate } from "react-router-dom";
+import { useCarWash } from "../../../../../hooks/useCarWash";
+import toast, { Toaster } from "react-hot-toast";
 
 const Rug = () => {
   const [rugPrice, setRugPrice] = useState("");
   const [washerName, setWasherName] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const navigate = useNavigate();
+  const { createBooking, isLoading } = useCarWash();
 
   const paymentMethods = [
     { id: "cash", name: "Cash" },
@@ -24,101 +26,54 @@ const Rug = () => {
   };
 
   const handleConfirm = async () => {
-    setIsProcessing(true);
     setShowModal(false);
 
     try {
-      const token =
-        localStorage.getItem("authToken") || localStorage.getItem("token");
-
-      if (!token) {
-        throw new Error("Authentication token not found");
-      }
-
-      const requestBody = {
-        rugPrice: parseFloat(rugPrice),
-        washer: washerName.trim(),
+      // FIXED: Send data in the correct format expected by backend
+      const bookingData = {
+        carNumber: "N/A", // Optional for rug wash
+        carModel: "N/A", // Optional for rug wash
+        customerName: "", // Optional
+        customerPhone: "", // Optional
         paymentMethod: paymentMethod,
+        items: [
+          {
+            washerName: washerName.trim(), // Backend expects washerName
+            serviceItemName: "Rug", // Backend expects serviceItemName
+            customPrice: parseFloat(rugPrice), // Backend expects customPrice for variable pricing
+          },
+        ],
       };
 
-      console.log("Sending booking request:", requestBody);
+      console.log("Booking data:", bookingData);
+      const result = await createBooking(bookingData);
 
-      const response = await fetch("YOUR_API_ENDPOINT_HERE", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(requestBody)
-      });
+      if (result.success) {
+        // Reset form
+        setRugPrice("");
+        setWasherName("");
+        setPaymentMethod("");
 
-      console.log("Response status:", response.status);
+        // Show success message
+        toast.success(result.message || "Booking created successfully!", {
+          duration: 4000,
+          position: "top-center",
+        });
 
-      let data;
-      const contentType = response.headers.get("content-type");
-
-      if (contentType && contentType.includes("application/json")) {
-        data = await response.json();
+        // Optional: Navigate to a different page
+        // navigate("/userdashboard/home");
       } else {
-        const textResponse = await response.text();
-        console.error("Non-JSON response:", textResponse);
-
-        if (
-          textResponse.includes("<!DOCTYPE html>") ||
-          textResponse.includes("<html>")
-        ) {
-          throw new Error(
-            "Server returned HTML page instead of API response. Check if the API endpoint is correct."
-          );
-        } else {
-          throw new Error(`Server returned: ${textResponse}`);
-        }
-      }
-
-      console.log("Response data:", data);
-
-      if (response.ok) {
-        setTimeout(() => {
-          setIsProcessing(false);
-          console.log("Booking successful:", data);
-          // Reset form
-          setRugPrice("");
-          setWasherName("");
-          setPaymentMethod("");
-          alert("Booking successful!");
-        }, 2000);
-      } else {
-        setTimeout(() => {
-          setIsProcessing(false);
-          const errorMessage =
-            data?.message ||
-            data?.error ||
-            "Booking failed. Please try again.";
-          console.error("Booking failed:", errorMessage);
-          alert(errorMessage);
-        }, 2000);
+        toast.error(result.message || "Booking failed. Please try again.", {
+          duration: 5000,
+          position: "top-right",
+        });
       }
     } catch (error) {
       console.error("Error processing booking:", error);
-      setTimeout(() => {
-        setIsProcessing(false);
-
-        let errorMessage = "An error occurred. Please try again.";
-
-        if (error.message.includes("Failed to fetch")) {
-          errorMessage =
-            "Unable to connect to server. Please check your internet connection.";
-        } else if (error.message.includes("Authentication token not found")) {
-          errorMessage = "Please log in again to continue.";
-        } else if (error.message.includes("HTML page")) {
-          errorMessage = "Server configuration error. Please contact support.";
-        } else {
-          errorMessage = error.message;
-        }
-
-        console.error("Final error:", errorMessage);
-        alert(errorMessage);
-      }, 2000);
+      toast.error("An error occurred. Please try again.", {
+        duration: 5000,
+        position: "top-right",
+      });
     }
   };
 
@@ -151,10 +106,10 @@ const Rug = () => {
 
         {/* Washer Name Input */}
         <div className="input-section">
-          <label className="input-label">Attendant Name</label>
+          <label className="input-label">Washer (Attendant)</label>
           <input
             type="text"
-            placeholder="Enter attendant name..."
+            placeholder="Enter washer name..."
             value={washerName}
             onChange={(e) => setWasherName(e.target.value)}
             className="washer-input"
@@ -193,19 +148,14 @@ const Rug = () => {
         <button
           className="book-button"
           onClick={handlePay}
-          disabled={
-            !rugPrice ||
-            !washerName ||
-            !paymentMethod ||
-            isProcessing
-          }
+          disabled={!rugPrice || !washerName || !paymentMethod || isLoading}
         >
-          {isProcessing ? "Processing..." : "Book Now"}
+          {isLoading ? "Processing..." : "Book Now"}
         </button>
       </div>
 
       {/* Processing Overlay */}
-      {isProcessing && (
+      {isLoading && (
         <div className="processing-overlay">
           <div className="processing-message">
             <div className="processing-spinner"></div>
@@ -230,14 +180,19 @@ const Rug = () => {
 
             <div className="modal-body">
               <div className="confirm-row">
-                <span className="confirm-label">Rug Price</span>
+                <span className="confirm-label">Service</span>
+                <span className="confirm-value">Rug Wash</span>
+              </div>
+
+              <div className="confirm-row">
+                <span className="confirm-label">Price</span>
                 <span className="confirm-value">
                   ₦{parseFloat(rugPrice).toLocaleString()}
                 </span>
               </div>
 
               <div className="confirm-row">
-                <span className="confirm-label">Attendant</span>
+                <span className="confirm-label">Washer</span>
                 <span className="confirm-value">{washerName}</span>
               </div>
 
@@ -259,9 +214,9 @@ const Rug = () => {
             <button
               className="confirm-button"
               onClick={handleConfirm}
-              disabled={isProcessing}
+              disabled={isLoading}
             >
-              {isProcessing ? "Processing..." : "Confirm Booking"}
+              {isLoading ? "Processing..." : "Confirm Booking"}
             </button>
           </div>
         </div>

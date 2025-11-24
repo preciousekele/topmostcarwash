@@ -491,69 +491,248 @@
   margin-bottom: clamp(12px, 2vw, 16px);
 }
 
-/* Mobile Specific Adjustments */
+/* Mobile Specific Adjustments - MODIFIED */
 @media (max-width: 768px) {
-  .washer-table {
-    min-width: 100%;
+  .washer-page {
+    padding: 8px 10px;
+  }
+
+  .washer-header h1 {
+    font-size: 14px;
+  }
+
+  .search-container {
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .search-input-wrapper {
+    max-width: 100%;
+  }
+
+  .search-inputs {
+    font-size: 11px;
+    padding: 8px 10px 8px 32px;
+  }
+
+  .search-icon {
+    width: 14px;
+    height: 14px;
+    left: 10px;
+  }
+
+  .filter-button {
+    min-width: 36px;
+    min-height: 36px;
+    padding: 8px;
+  }
+
+  .filter-button svg {
+    width: 16px;
+    height: 16px;
   }
 
   .calendar-dropdown {
     right: 0;
     left: auto;
-    width: calc(100vw - 32px);
-    max-width: 320px;
+    width: calc(100vw - 24px);
+    max-width: 300px;
+    min-width: 260px;
   }
 
-  .wash-details-header,
-  .wash-detail-row {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    min-width: auto;
+  .date-filter-badge {
+    font-size: 10px;
+    padding: 5px 8px;
   }
 
-  .detail-cell.service,
-  .detail-cell.worker-earning {
-    grid-column: span 1;
+  .washer-table {
+    min-width: 480px;
   }
 
-  .detail-cell.quantity,
-  .detail-cell.company-earning {
-    grid-column: span 1;
+  .washer-table thead th {
+    padding: 10px 6px;
+    font-size: 11px;
+  }
+
+  .washer-table tbody td {
+    padding: 10px 6px;
+    font-size: 11px;
   }
 
   .header-with-icon.washer {
-    margin-left: 0;
+    margin-left: 12px;
   }
 
-  .search-input-wrapper {
-    max-width: 100%;
+  .sort-icon-left {
+    width: 11px;
+    height: 11px;
+  }
+
+  .expand-btn {
+    width: 14px;
+    height: 14px;
+  }
+
+  .expand-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .washer-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .washer-name {
+    font-size: 11px;
+  }
+
+  .washer-name-cell {
+    gap: 6px;
+  }
+
+  /* Expanded details section */
+  .wash-details-container {
+    padding: 8px 12px;
+  }
+
+  .wash-details-header {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 10px 8px;
+    font-size: 10px;
+    min-width: 440px;
+  }
+
+  .wash-detail-row {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 8px;
+    font-size: 10px;
+    min-width: 440px;
+  }
+
+  .detail-cell {
+    font-size: 10px;
+  }
+
+  .detail-cell.service,
+  .detail-cell.quantity,
+  .detail-cell.worker-earning,
+  .detail-cell.company-earning {
+    font-size: 10px;
+    line-height: 16px;
   }
 }
 
 /* Very Small Mobile */
 @media (max-width: 480px) {
   .washer-page {
-    margin-top: -10px;
+    padding: 6px 8px;
+  }
+
+  .washer-header h1 {
+    font-size: 13px;
   }
 
   .search-container {
-    padding: 8px;
-    gap: 8px;
+    padding: 6px;
+    gap: 5px;
+  }
+
+  .search-inputs {
+    font-size: 10px;
+    padding: 7px 8px 7px 28px;
+  }
+
+  .search-icon {
+    width: 12px;
+    height: 12px;
+    left: 8px;
+  }
+
+  .filter-button {
+    min-width: 32px;
+    min-height: 32px;
+    padding: 6px;
+  }
+
+  .filter-button svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .calendar-dropdown {
+    width: calc(100vw - 20px);
+    max-width: 280px;
+    min-width: 240px;
+  }
+
+  .washer-table {
+    min-width: 400px;
+  }
+
+  .washer-table thead th {
+    padding: 8px 4px;
+    font-size: 10px;
+  }
+
+  .washer-table tbody td {
+    padding: 8px 4px;
+    font-size: 10px;
+  }
+
+  .header-with-icon.washer {
+    margin-left: 8px;
+  }
+
+  .washer-name {
+    font-size: 10px;
+  }
+
+  .washer-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .expand-btn {
+    width: 12px;
+    height: 12px;
+  }
+
+  .expand-btn svg {
+    width: 12px;
+    height: 12px;
   }
 
   .wash-details-container {
-    padding: 8px 12px;
+    padding: 6px 8px;
   }
 
-  .wash-details-header,
+  .wash-details-header {
+    padding: 8px 6px;
+    font-size: 9px;
+    min-width: 380px;
+    gap: 6px;
+  }
+
   .wash-detail-row {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 10px 12px;
+    padding: 6px;
+    font-size: 9px;
+    min-width: 380px;
+    gap: 6px;
   }
 
-  .detail-cell.quantity {
-    justify-content: flex-start;
+  .detail-cell {
+    font-size: 9px;
+  }
+
+  .detail-cell.service,
+  .detail-cell.quantity,
+  .detail-cell.worker-earning,
+  .detail-cell.company-earning {
+    font-size: 9px;
+    line-height: 14px;
   }
 }
 

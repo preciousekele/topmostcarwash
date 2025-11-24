@@ -24,6 +24,11 @@ export const useCarWash = () => {
     setError(null);
 
     try {
+      console.log('=== HOOK: Received booking data ===');
+      console.log(bookingData);
+      console.log('==================================');
+
+      // Pass data directly to API - transformation happens in createRecordApi
       const response = await createCarWashRecord(bookingData);
       
       if (response.success) {
@@ -36,7 +41,16 @@ export const useCarWash = () => {
         throw new Error(response.message || 'Failed to create booking');
       }
     } catch (err) {
-      const errorMessage = err.message || 'An error occurred while creating the booking';
+      const errorMessage = err.response?.data?.message || 
+                          err.response?.data?.detail || 
+                          err.message || 
+                          'An error occurred while creating the booking';
+      
+      console.error('=== HOOK ERROR ===');
+      console.error('Error message:', errorMessage);
+      console.error('Full error:', err);
+      console.error('==================');
+      
       setError(errorMessage);
       
       return {

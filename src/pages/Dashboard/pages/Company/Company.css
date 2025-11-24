@@ -603,3 +603,33 @@
     font-size: 13px;
   }
 }
+
+/* Add to existing Company.css */
+
+.date-row {
+  background-color: #f3f4f6 !important;
+  font-weight: 700;
+}
+
+.branch-row {
+  background-color: #fafbfc !important;
+  padding-left: 40px !important;
+}
+
+.branch-name-cell {
+  padding-left: 40px;
+}
+
+.branch-name-text {
+  font-weight: 600;
+  color: #4b5563;
+  font-size: 13px;
+}
+
+.company-row.date-row:hover {
+  background-color: #e5e7eb !important;
+}
+
+.company-row.branch-row:hover {
+  background-color: #f3f4f6 !important;
+}

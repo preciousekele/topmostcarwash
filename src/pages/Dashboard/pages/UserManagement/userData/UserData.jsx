@@ -25,11 +25,11 @@ const UserData = () => {
       setLoading(true);
       setError(null);
       
-      console.log('Fetching daily summary for date:', dateString); // Debug log
+      console.log('Fetching daily summary for date:', dateString);
       
       const response = await getDailySummary(dateString);
 
-      console.log('API Response:', response); // Debug log
+      console.log('API Response:', response);
 
       if (response.success && response.data && response.data.washerPayments) {
         const transformedData = response.data.washerPayments.map((washer) => ({
@@ -42,14 +42,12 @@ const UserData = () => {
           totalJobs: washer.itemsWashed,
           carsWashed: washer.carsWashed,
           createdAt: response.data.date,
-          // Store raw numbers for sorting if needed
           workerPayRaw: washer.washerEarnings,
           companyPayRaw: washer.companyEarnings,
-          // Store items directly in the washer object
           items: washer.items,
         }));
 
-        console.log('Transformed washers:', transformedData.length); // Debug log
+        console.log('Transformed washers:', transformedData.length);
         setWasherData(transformedData);
       } else {
         setWasherData([]);
@@ -68,7 +66,6 @@ const UserData = () => {
       return [];
     }
 
-    // Group items by service type and calculate totals
     const itemsMap = {};
     
     washer.items.forEach(item => {
@@ -88,7 +85,6 @@ const UserData = () => {
       itemsMap[serviceItem].companyEarning += item.companyShare;
     });
 
-    // Convert to array and format
     return Object.values(itemsMap).map(item => ({
       service: item.service,
       quantity: item.quantity,
@@ -97,7 +93,6 @@ const UserData = () => {
     }));
   };
 
-  // Fetch data when component mounts or date range changes
   useEffect(() => {
     const dateString = selectedDateRange.start 
       ? formatDateForAPI(selectedDateRange.start)
@@ -106,7 +101,6 @@ const UserData = () => {
     fetchWasherData(dateString);
   }, [selectedDateRange]);
 
-  // Format date to YYYY-MM-DD for API
   const formatDateForAPI = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -114,7 +108,6 @@ const UserData = () => {
     return `${year}-${month}-${day}`;
   };
 
-  // Close calendar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (calendarRef.current && !calendarRef.current.contains(event.target)) {
@@ -143,13 +136,12 @@ const UserData = () => {
   };
 
   const handleDateClick = (date) => {
-    // Single date selection only for now
     setSelectedDateRange({ start: date, end: null });
     setShowCalendar(false);
   };
 
   const clearDateFilter = () => {
-    console.log('Clearing date filter'); // Debug log
+    console.log('Clearing date filter');
     setSelectedDateRange({ start: null, end: null });
     setShowCalendar(false);
   };
@@ -235,12 +227,10 @@ const UserData = () => {
       "December",
     ];
 
-    // Empty cells for days before month starts
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(<div key={`empty-${i}`} className="calendar-day empty"></div>);
     }
 
-    // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(
         currentMonth.getFullYear(),
@@ -394,17 +384,12 @@ const UserData = () => {
                     <span>Company Pay</span>
                   </div>
                 </th>
-                  {/* <div className="header-with-icon">
-                    <ChevronsUpDown size={14} className="sort-icon-left" />
-                    <span>Total Jobs</span>
-                  </div> */}
-                
               </tr>
             </thead>
             <tbody>
               {filteredWashers.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="no-washers">
+                  <td colSpan="3" className="no-washers">
                     <p>{washerData.length === 0 ? "No payment data available for selected date" : "No washers found matching your search"}</p>
                   </td>
                 </tr>
@@ -438,12 +423,11 @@ const UserData = () => {
                       </td>
                       <td>{washer.workerPay}</td>
                       <td>{washer.companyPay}</td>
-                      {/* <td>{washer.totalJobs}</td> */}
                     </tr>
 
                     {expandedRows[washer.id] && (
                       <tr className="expanded-row">
-                        <td colSpan="4">
+                        <td colSpan="3">
                           <div className="wash-details-container">
                             <div className="wash-details-header">
                               <div className="detail-cell service">Service Type</div>
