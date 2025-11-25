@@ -3,9 +3,9 @@ import axios from 'axios';
 // Base API URL - Uses environment variable or falls back to localhost
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/';
 
-console.log('🔧 API Base URL:', BASE_URL);
-console.log('🔧 Environment Variable:', import.meta.env.VITE_API_BASE_URL);
-
+console.log('🔴 authAPI.js - VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL);
+console.log('🔴 authAPI.js - VITE_API_URL:', import.meta.env.VITE_API_URL);
+console.log('🔴 authAPI.js - All env vars:', import.meta.env);
 
 // Create axios instance
 const apiClient = axios.create({
