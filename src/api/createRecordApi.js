@@ -72,7 +72,7 @@ export const createCarWashRecord = async (recordData) => {
     console.log(JSON.stringify(transformedData, null, 2));
     console.log('========================');
 
-    const response = await apiClient.post('/records/car-wash', transformedData);
+    const response = await apiClient.post('/api/records/car-wash', transformedData);
     
     console.log('=== BACKEND RESPONSE ===');
     console.log(JSON.stringify(response, null, 2));
@@ -106,7 +106,7 @@ export const getCarWashRecords = async (filters = {}) => {
       params.append('washerId', filters.washerId);
     }
 
-    const response = await apiClient.get(`/records/car-wash?${params.toString()}`);
+    const response = await apiClient.get(`/api/records/car-wash?${params.toString()}`);
     return response;
   } catch (error) {
     console.error('Error fetching car wash records:', error);
@@ -122,7 +122,7 @@ export const getCarWashRecords = async (filters = {}) => {
 export const getDailySummary = async (date) => {
   try {
     const params = date ? `?date=${date}` : '';
-    const response = await apiClient.get(`/payments/daily-summary${params}`);
+    const response = await apiClient.get(`/api/payments/daily-summary${params}`);
     return response;
   } catch (error) {
     console.error('Error fetching daily summary:', error);
@@ -137,7 +137,7 @@ export const getDailySummary = async (date) => {
  */
 export const getCarWashById = async (id) => {
   try {
-    const response = await apiClient.get(`/records/car-wash/${id}`);
+    const response = await apiClient.get(`/api/records/car-wash/${id}`);
     return response;
   } catch (error) {
     console.error('Error fetching car wash record:', error);
@@ -160,7 +160,7 @@ export const getCarWashById = async (id) => {
 export const getCompanySummary = async (date = null) => {
   try {
     const params = date ? `?date=${date}` : '';
-    const response = await apiClient.get(`/records/company-summary${params}`);
+    const response = await apiClient.get(`/api/records/company-summary${params}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching company summary:', error);
@@ -171,7 +171,7 @@ export const getCompanySummary = async (date = null) => {
 export const getCompanySummaryAllBranches = async (date) => {
   try {
     const params = date ? `?date=${date}` : '';
-    const response = await apiClient.get(`/records/company-summary-all${params}`);
+    const response = await apiClient.get(`/api/records/company-summary-all${params}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching company summary:', error);
@@ -182,7 +182,7 @@ export const getCompanySummaryAllBranches = async (date) => {
 export const getAllWashersDailySummary = async (date = null) => {
   try {
     const params = date ? `?date=${date}` : '';
-    const response = await apiClient.get(`/records/washers/daily-summary${params}`);
+    const response = await apiClient.get(`/api/records/washers/daily-summary${params}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching washers summary:', error);
@@ -194,7 +194,7 @@ export const getAllWashersDailySummary = async (date = null) => {
 export const getWasherDailySummary = async (washerId, date = null) => {
   try {
     const params = date ? `?date=${date}` : '';
-    const response = await apiClient.get(`/records/washer/${washerId}/daily-summary${params}`);
+    const response = await apiClient.get(`/api/records/washer/${washerId}/daily-summary${params}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching washer summary:', error);
