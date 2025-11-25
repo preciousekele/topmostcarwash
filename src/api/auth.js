@@ -1,10 +1,10 @@
-import axios from 'axios';
+import axios from "axios";
 
 // Create axios instance
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
   withCredentials: true,
 });
@@ -12,12 +12,12 @@ const apiClient = axios.create({
 // Request interceptor to add token
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
-    
+    const token = localStorage.getItem("token");
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     return config;
   },
   (error) => {
@@ -31,9 +31,9 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Token expired or invalid
-      localStorage.removeItem('token');
-      localStorage.removeItem('auth-storage');
-      window.location.href = '/login';
+      localStorage.removeItem("token");
+      localStorage.removeItem("auth-storage");
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
@@ -47,10 +47,11 @@ export const authAPI = {
    */
   login: async (credentials) => {
     try {
-      const response = await apiClient.post('/auth/login', credentials);
+      const response = await apiClient.post("/api/auth/login", credentials);
       return response.data;
     } catch (error) {
-      const message = error.response?.data?.message || 'Login failed. Please try again.';
+      const message =
+        error.response?.data?.message || "Login failed. Please try again.";
       throw new Error(message);
     }
   },
@@ -62,10 +63,12 @@ export const authAPI = {
    */
   register: async (userData) => {
     try {
-      const response = await apiClient.post('/auth/register', userData);
+      const response = await apiClient.post("/auth/register", userData);
       return response.data;
     } catch (error) {
-      const message = error.response?.data?.message || 'Registration failed. Please try again.';
+      const message =
+        error.response?.data?.message ||
+        "Registration failed. Please try again.";
       throw new Error(message);
     }
   },
@@ -76,12 +79,12 @@ export const authAPI = {
    */
   logout: async () => {
     try {
-      const response = await apiClient.post('/auth/logout');
+      const response = await apiClient.post("/auth/logout");
       return response.data;
     } catch (error) {
       // Continue with logout even if API call fails
-      console.error('Logout API error:', error);
-      return { success: true, message: 'Logged out' };
+      console.error("Logout API error:", error);
+      return { success: true, message: "Logged out" };
     }
   },
 
@@ -91,10 +94,11 @@ export const authAPI = {
    */
   getCurrentUser: async () => {
     try {
-      const response = await apiClient.get('/auth/me');
+      const response = await apiClient.get("/auth/me");
       return response.data;
     } catch (error) {
-      const message = error.response?.data?.message || 'Failed to fetch user data.';
+      const message =
+        error.response?.data?.message || "Failed to fetch user data.";
       throw new Error(message);
     }
   },
@@ -106,10 +110,11 @@ export const authAPI = {
    */
   changePassword: async (passwords) => {
     try {
-      const response = await apiClient.put('/auth/change-password', passwords);
+      const response = await apiClient.put("/auth/change-password", passwords);
       return response.data;
     } catch (error) {
-      const message = error.response?.data?.message || 'Failed to change password.';
+      const message =
+        error.response?.data?.message || "Failed to change password.";
       throw new Error(message);
     }
   },
@@ -120,10 +125,11 @@ export const authAPI = {
    */
   getBranches: async () => {
     try {
-      const response = await apiClient.get('/auth/branches');
+      const response = await apiClient.get("/auth/branches");
       return response.data;
     } catch (error) {
-      const message = error.response?.data?.message || 'Failed to fetch branches.';
+      const message =
+        error.response?.data?.message || "Failed to fetch branches.";
       throw new Error(message);
     }
   },
@@ -135,10 +141,11 @@ export const authAPI = {
    */
   forgotPassword: async (email) => {
     try {
-      const response = await apiClient.post('/auth/forgot-password', { email });
+      const response = await apiClient.post("/auth/forgot-password", { email });
       return response.data;
     } catch (error) {
-      const message = error.response?.data?.message || 'Failed to process request.';
+      const message =
+        error.response?.data?.message || "Failed to process request.";
       throw new Error(message);
     }
   },
@@ -150,10 +157,11 @@ export const authAPI = {
    */
   resetPassword: async (data) => {
     try {
-      const response = await apiClient.post('/auth/reset-password', data);
+      const response = await apiClient.post("/auth/reset-password", data);
       return response.data;
     } catch (error) {
-      const message = error.response?.data?.message || 'Failed to reset password.';
+      const message =
+        error.response?.data?.message || "Failed to reset password.";
       throw new Error(message);
     }
   },

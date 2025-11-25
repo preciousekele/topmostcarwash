@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base API URL - Uses environment variable or falls back to localhost
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/';
 
 // Create axios instance
 const apiClient = axios.create({
@@ -17,7 +17,6 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     // Get token from localStorage
-  
     const token = localStorage.getItem('token');
     
     if (token) {
