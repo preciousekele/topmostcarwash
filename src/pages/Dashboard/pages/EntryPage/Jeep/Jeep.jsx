@@ -62,9 +62,12 @@ const Jeep = () => {
     setShowModal(false);
 
     try {
+      const formattedWasherName =
+        washerName.trim().charAt(0).toUpperCase() + washerName.trim().slice(1);
+
       const bookingData = {
         plateNumber: plateNumber.trim(),
-        washer: washerName.trim(),
+        washer: formattedWasherName,
         items: selectedItems.map((item) => ({
           name: item.name,
           price: item.price,
@@ -107,11 +110,11 @@ const Jeep = () => {
 
   return (
     <div className="carwash-container">
-      <Toaster 
+      <Toaster
         position="top-center"
         toastOptions={{
           style: {
-            marginTop: '10px',
+            marginTop: "10px",
           },
         }}
       />
@@ -163,7 +166,17 @@ const Jeep = () => {
             type="text"
             placeholder="Enter washer name..."
             value={washerName}
-            onChange={(e) => setWasherName(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              // Capitalize first letter as user types
+              if (value.length === 1) {
+                setWasherName(value.toUpperCase());
+              } else if (value.length > 1) {
+                setWasherName(value.charAt(0).toUpperCase() + value.slice(1));
+              } else {
+                setWasherName(value);
+              }
+            }}
             className="washer-input"
           />
         </div>

@@ -96,7 +96,7 @@ const TransactionsHistory = () => {
         (name) => name.includes("pickup") || name.includes("pick-up")
       )
     )
-      return "Pick-up";
+      return "Pick-Up";
     if (itemNames.some((name) => name.includes("rug"))) return "Rug";
     return "Car"; // Default to Car
   };

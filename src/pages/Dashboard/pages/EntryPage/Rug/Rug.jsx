@@ -29,6 +29,9 @@ const Rug = () => {
     setShowModal(false);
 
     try {
+      const formattedWasherName =
+        washerName.trim().charAt(0).toUpperCase() + washerName.trim().slice(1);
+
       // FIXED: Send data in the correct format expected by backend
       const bookingData = {
         carNumber: "N/A", // Optional for rug wash
@@ -38,7 +41,7 @@ const Rug = () => {
         paymentMethod: paymentMethod,
         items: [
           {
-            washerName: washerName.trim(), // Backend expects washerName
+            washerName: formattedWasherName,
             serviceItemName: "Rug", // Backend expects serviceItemName
             customPrice: parseFloat(rugPrice), // Backend expects customPrice for variable pricing
           },
@@ -79,11 +82,11 @@ const Rug = () => {
 
   return (
     <div className="carwash-container">
-      <Toaster 
+      <Toaster
         position="top-center"
         toastOptions={{
           style: {
-            marginTop: '10px',
+            marginTop: "10px",
           },
         }}
       />
@@ -119,7 +122,17 @@ const Rug = () => {
             type="text"
             placeholder="Enter washer name..."
             value={washerName}
-            onChange={(e) => setWasherName(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              // Capitalize first letter as user types
+              if (value.length === 1) {
+                setWasherName(value.toUpperCase());
+              } else if (value.length > 1) {
+                setWasherName(value.charAt(0).toUpperCase() + value.slice(1));
+              } else {
+                setWasherName(value);
+              }
+            }}
             className="washer-input"
           />
         </div>

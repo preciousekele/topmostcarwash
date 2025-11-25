@@ -588,7 +588,6 @@
   .calendar-dropdown {
     right: 0;
     left: auto;
-    width: calc(100vw - 32px);
     min-width: auto;
     max-width: 400px;
   }
@@ -603,8 +602,6 @@
     font-size: 13px;
   }
 }
-
-/* Add to existing Company.css */
 
 .date-row {
   background-color: #f3f4f6 !important;
