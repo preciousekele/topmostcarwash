@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create axios instance
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/",
+  baseURL: import.meta.env.VITE_BASE_API_URL || "http://localhost:5000",
   headers: {
     "Content-Type": "application/json",
   },
@@ -94,7 +94,7 @@ export const authAPI = {
    */
   getCurrentUser: async () => {
     try {
-      const response = await apiClient.get("/auth/me");
+      const response = await apiClient.get("/api/auth/me");
       return response.data;
     } catch (error) {
       const message =
