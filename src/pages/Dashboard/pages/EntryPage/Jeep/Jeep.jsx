@@ -107,6 +107,14 @@ const Jeep = () => {
 
   return (
     <div className="carwash-container">
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          style: {
+            marginTop: '10px',
+          },
+        }}
+      />
       <div className="carwash-header">
         <button
           className="back-button"

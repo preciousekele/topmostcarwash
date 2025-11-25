@@ -87,8 +87,6 @@ const Car = () => {
           position: "top-center",
         });
 
-        // Optional: Navigate to a different page
-        // navigate("/userdashboard/home");
       } else {
         toast.error(result.message || "Booking failed. Please try again.", {
           duration: 5000,
@@ -106,6 +104,14 @@ const Car = () => {
 
   return (
     <div className="carwash-container">
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          style: {
+            marginTop: '10px',
+          },
+        }}
+      />
       <div className="carwash-header">
         <button
           className="back-button"
