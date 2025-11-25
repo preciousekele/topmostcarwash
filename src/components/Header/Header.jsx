@@ -2,58 +2,42 @@ import React, { useState, useEffect } from 'react';
 import './Header.css';
 
 const Header = ({ title }) => {
-  const [userEmail, setUserEmail] = useState('');
-  const [userName, setUserName] = useState('Administrator');
-  const [initials, setInitials] = useState('');
+  const [userData, setUserData] = useState({
+    name: 'Administrator',
+    email: 'topmostcarwash@gmail.com',
+    initials: 'PE'
+  });
 
   useEffect(() => {
-    // Retrieve user data from localStorage (common auth storage)
-    const getUserData = () => {
+    // Fetch data from auth storage
+    const authData = localStorage.getItem('auth-storage');
+    
+    if (authData) {
       try {
-        // Check for user data in various common storage keys
-        const authUser = localStorage.getItem('user');
-        const authData = localStorage.getItem('authData');
-        const userProfile = localStorage.getItem('userProfile');
+        const parsedData = JSON.parse(authData);
+        const user = parsedData?.state?.user;
         
-        let userData = null;
-        
-        // Try parsing stored auth data
-        if (authUser) {
-          userData = JSON.parse(authUser);
-        } else if (authData) {
-          userData = JSON.parse(authData);
-        } else if (userProfile) {
-          userData = JSON.parse(userProfile);
-        }
-        
-        // Extract email and name from userData
-        if (userData) {
-          const email = userData.email || userData.userEmail || '';
-          const name = userData.name || userData.displayName || userData.username || 'Administrator';
-          
-          setUserEmail(email);
-          setUserName(name);
-          
-          // Generate initials from name or email
-          if (name && name !== 'Administrator') {
-            const nameParts = name.split(' ');
-            const firstInitial = nameParts[0]?.charAt(0).toUpperCase() || '';
-            const lastInitial = nameParts[1]?.charAt(0).toUpperCase() || '';
-            setInitials(firstInitial + lastInitial || firstInitial);
-          } else if (email) {
-            const emailName = email.split('@')[0];
-            const emailParts = emailName.split(/[._-]/);
-            const firstInitial = emailParts[0]?.charAt(0).toUpperCase() || '';
-            const lastInitial = emailParts[1]?.charAt(0).toUpperCase() || '';
-            setInitials(firstInitial + lastInitial || firstInitial + (emailParts[0]?.charAt(1).toUpperCase() || ''));
-          }
+        if (user) {
+          // Generate initials from name
+          const getInitials = (name) => {
+            if (!name) return 'PE';
+            const names = name.trim().split(' ');
+            if (names.length >= 2) {
+              return `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase();
+            }
+            return name.substring(0, 2).toUpperCase();
+          };
+
+          setUserData({
+            name: user.name || 'Administrator',
+            email: user.email || 'topmostcarwash@gmail.com',
+            initials: getInitials(user.name)
+          });
         }
       } catch (error) {
-        console.error('Error retrieving user data from storage:', error);
+        console.error('Error parsing auth data:', error);
       }
-    };
-
-    getUserData();
+    }
   }, []);
 
   return (
@@ -61,13 +45,16 @@ const Header = ({ title }) => {
       <div className='header-container'>
         <h1 className='header-title'>{title}</h1>
         <div className='header-right'>
+          {/* <div className='notification-icon'>
+            <img src={NotificationImg} alt="Notification" className="notification-bg-image" />
+          </div> */}
           <div className='header-user'>
             <div className='user-avatar'>
-              <span className='avatar-text'>{initials || 'U'}</span>
+              <span className='avatar-text'>{userData.initials}</span>
             </div>
             <div className='user-info'>
-              <div className='user-names'>{userName}</div>
-              <div className='user-email'>{userEmail || 'user@example.com'}</div>
+              <div className='user-names'>{userData.name}</div>
+              <div className='user-email'>{userData.email}</div>
             </div>
           </div>
         </div>
