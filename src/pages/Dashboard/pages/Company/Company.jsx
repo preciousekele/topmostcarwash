@@ -16,6 +16,14 @@ const Company = () => {
   const [error, setError] = useState(null);
   const calendarRef = useRef(null);
 
+  // Format price with thousand separators
+  const formatPrice = (amount) => {
+    return amount.toLocaleString('en-NG', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  };
+
   // Format date to "22 November, 2025" format
   const formatDateToShortFormat = (dateString) => {
     const date = new Date(dateString);
@@ -362,8 +370,8 @@ const Company = () => {
                             <span className="company-date">{company.date}</span>
                           </div>
                         </td>
-                        <td>₦{company.totalEarnings.toFixed(2)}</td>
-                        <td>₦{company.companyShare.toFixed(2)}</td>
+                        <td>₦{formatPrice(company.totalEarnings)}</td>
+                        <td>₦{formatPrice(company.companyShare)}</td>
                       </tr>
 
                       {/* Branches Rows */}
@@ -387,8 +395,8 @@ const Company = () => {
                                 <span className="branch-name-text">{branchData.branch.name}</span>
                               </div>
                             </td>
-                            <td>₦{branchData.totalEarnings.toFixed(2)}</td>
-                            <td>₦{branchData.companyShare.toFixed(2)}</td>
+                            <td>₦{formatPrice(branchData.totalEarnings)}</td>
+                            <td>₦{formatPrice(branchData.companyShare)}</td>
                           </tr>
 
                           {/* Items for this branch */}
@@ -399,7 +407,7 @@ const Company = () => {
                                   <div className="service-details-header">
                                     <div className="detail-cell item">Items Washed</div>
                                     <div className="detail-cell quantity">Quantity</div>
-                                    <div className="detail-cell company-earning">Company Earning</div>
+                                    <div className="detail-cell company-earning">Company</div>
                                   </div>
                                   {branchData.items && branchData.items.length > 0 ? (
                                     branchData.items.map((detail, itemIdx) => (
@@ -411,7 +419,7 @@ const Company = () => {
                                           {detail.quantity}
                                         </div>
                                         <div className="detail-cell company-earning">
-                                          ₦{detail.companyEarning.toFixed(2)}
+                                          ₦{formatPrice(detail.companyEarning)}
                                         </div>
                                       </div>
                                     ))

@@ -37,8 +37,8 @@ const UserData = () => {
           name: washer.washerName,
           phone: washer.washerPhone,
           image: washer1Img,
-          workerPay: `₦${washer.washerEarnings.toFixed(2)}`,
-          companyPay: `₦${washer.companyEarnings.toFixed(2)}`,
+          workerPay: `₦${washer.washerEarnings.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+          companyPay: `₦${washer.companyEarnings.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
           totalJobs: washer.itemsWashed,
           carsWashed: washer.carsWashed,
           createdAt: response.data.date,
@@ -88,8 +88,8 @@ const UserData = () => {
     return Object.values(itemsMap).map(item => ({
       service: item.service,
       quantity: item.quantity,
-      workerEarning: `₦${item.workerEarning.toFixed(2)}`,
-      companyEarning: `₦${item.companyEarning.toFixed(2)}`,
+      workerEarning: `₦${item.workerEarning.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      companyEarning: `₦${item.companyEarning.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
     }));
   };
 
@@ -123,6 +123,13 @@ const UserData = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showCalendar]);
+
+  const formatPrice = (amount) => {
+    return amount.toLocaleString('en-NG', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  };
 
   const toggleRow = (washerId) => {
     setExpandedRows((prev) => ({
@@ -390,7 +397,7 @@ const UserData = () => {
               {filteredWashers.length === 0 ? (
                 <tr>
                   <td colSpan="3" className="no-washers">
-                    <p>{washerData.length === 0 ? "No payment data available for selected date" : "No washers found matching your search"}</p>
+                    <p>{washerData.length === 0 ? "No payment data available for the selected date" : "No washers found matching your search"}</p>
                   </td>
                 </tr>
               ) : (

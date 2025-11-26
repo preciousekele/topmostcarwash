@@ -50,7 +50,8 @@
 
 .search-inputs {
   width: 100%;
-  padding: clamp(10px, 1.5vw, 12px) clamp(12px, 2vw, 16px) clamp(10px, 1.5vw, 12px) clamp(40px, 6vw, 48px);
+  padding: clamp(10px, 1.5vw, 12px) clamp(12px, 2vw, 16px)
+    clamp(10px, 1.5vw, 12px) clamp(40px, 6vw, 48px);
   border: 1px solid #e5e7eb;
   border-radius: clamp(8px, 1.5vw, 12px);
   font-size: clamp(12px, 1.8vw, 14px);
@@ -330,13 +331,16 @@
 
 .washer-table tbody td {
   padding: clamp(12px, 3vw, 24px);
-  font-weight: 700;
-  color: rgba(65, 68, 73, 1);
+  font-weight: 500;
+  color: rgb(23, 24, 25);
   font-size: clamp(12px, 1.8vw, 14px);
   font-family: "Plus Jakarta Sans", sans-serif;
   line-height: 20px;
-  letter-spacing: -0.5px;
+  letter-spacing: 0.4px;
   border-bottom: 0.4px solid rgba(185, 194, 209, 1);
+  font-family: "Plus Jakarta Sans ", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .washer-name-cell {
@@ -458,7 +462,10 @@
   font-size: clamp(12px, 1.8vw, 14px);
   font-family: "Plus Jakarta Sans", sans-serif;
   line-height: 18px;
-  letter-spacing: -0.5px;
+  letter-spacing: 0.2px;
+  font-family: "Plus Jakarta Sans ", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .detail-cell.company-earning {
@@ -468,6 +475,9 @@
   font-family: "Plus Jakarta Sans", sans-serif;
   line-height: 18px;
   letter-spacing: -0.5px;
+  font-family: "Plus Jakarta Sans ", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .no-washers {
@@ -545,8 +555,13 @@
     padding: 5px 8px;
   }
 
+  .washer-table-container {
+    overflow-x: auto;
+  }
+
   .washer-table {
-    min-width: 480px;
+    min-width: 100%;
+    width: 100%;
   }
 
   .washer-table thead th {
@@ -592,36 +607,58 @@
   }
 
   /* Expanded details section */
+  .expanded-row td {
+    padding: 0 !important;
+  }
+
   .wash-details-container {
     padding: 8px 12px;
+    overflow-x: hidden;
+    width: 100%;
   }
 
   .wash-details-header {
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.6fr 0.9fr 0.9fr;
+    gap: 6px;
     padding: 10px 8px;
     font-size: 10px;
-    min-width: 440px;
+    width: 100%;
+    min-width: unset;
   }
 
   .wash-detail-row {
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.6fr 0.9fr 0.9fr;
+    gap: 6px;
     padding: 8px;
     font-size: 10px;
-    min-width: 440px;
+    width: 100%;
+    min-width: unset;
   }
 
   .detail-cell {
     font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  .detail-cell.service,
+  .detail-cell.service {
+    font-size: 10px;
+    line-height: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-word;
+  }
+
   .detail-cell.quantity,
   .detail-cell.worker-earning,
   .detail-cell.company-earning {
     font-size: 10px;
     line-height: 16px;
+    white-space: nowrap;
   }
 }
 
@@ -669,7 +706,8 @@
   }
 
   .washer-table {
-    min-width: 400px;
+    min-width: 100%;
+    width: 100%;
   }
 
   .washer-table thead th {
@@ -705,34 +743,58 @@
     height: 12px;
   }
 
+  .expanded-row td {
+    padding: 0 !important;
+  }
+
   .wash-details-container {
     padding: 6px 8px;
+    overflow-x: hidden;
+    width: 100%;
   }
 
   .wash-details-header {
+    display: grid;
+    grid-template-columns: 1.2fr 0.6fr 0.9fr 0.9fr;
     padding: 8px 6px;
     font-size: 9px;
-    min-width: 380px;
-    gap: 6px;
+    width: 100%;
+    min-width: unset;
+    gap: 5px;
   }
 
   .wash-detail-row {
+    display: grid;
+    grid-template-columns: 1.2fr 0.6fr 0.9fr 0.9fr;
     padding: 6px;
     font-size: 9px;
-    min-width: 380px;
-    gap: 6px;
+    width: 100%;
+    min-width: unset;
+    gap: 5px;
   }
 
   .detail-cell {
     font-size: 9px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  .detail-cell.service,
+  .detail-cell.service {
+    font-size: 9px;
+    line-height: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-word;
+  }
+
   .detail-cell.quantity,
   .detail-cell.worker-earning,
   .detail-cell.company-earning {
     font-size: 9px;
     line-height: 14px;
+    white-space: nowrap;
   }
 }
 

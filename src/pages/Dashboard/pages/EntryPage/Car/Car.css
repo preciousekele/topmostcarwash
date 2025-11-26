@@ -145,13 +145,16 @@
 }
 
 .car-item-price {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14.5px;
+  font-weight: 500;
   color: #097f58;
   margin-top: 4px;
   font-family: "Plus Jakarta Sans", sans-serif;
   line-height: 100%;
   letter-spacing: -6%;
+  font-family: "Plus Jakarta Sans ", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Payment Method Section */
@@ -407,6 +410,7 @@
   font-family: "Plus Jakarta Sans", sans-serif;
   line-height: 100%;
   letter-spacing: -6%;
+  
 }
 
 .items-list {
@@ -428,12 +432,14 @@
 }
 
 .item-price-small {
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 15.2px;
+  font-weight: 500;
   color: #212529;
-  font-family: "Plus Jakarta Sans", sans-serif;
   line-height: 100%;
   letter-spacing: -6%;
+  font-family: "Plus Jakarta Sans ", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .total-row {
@@ -444,12 +450,14 @@
 
 .total-row .confirm-label,
 .total-row .confirm-value {
-  font-weight: 600;
+  font-weight: 500;
   color: #097f58;
-  font-size: 15px;
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 18px;
   line-height: 100%;
-  letter-spacing: -6%;
+  letter-spacing: .6px;
+    font-family: "Plus Jakarta Sans ", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .confirm-button {

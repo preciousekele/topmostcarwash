@@ -439,7 +439,10 @@
   font-size: 14px;
   font-family: "Plus Jakarta Sans", sans-serif;
   line-height: 18px;
-  letter-spacing: -0.5px;
+  letter-spacing: .3px;
+  font-family: "Plus Jakarta Sans ", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .no-companies {
@@ -544,7 +547,7 @@
 
   .company-table tbody td {
     padding: 12px 8px;
-    font-size: 12px;
+    font-size: 10.5px;
     font-weight: 600;
   }
 
@@ -582,7 +585,7 @@
   .detail-cell.item,
   .detail-cell.quantity,
   .detail-cell.company-earning {
-    font-size: 11px;
+    font-size: 9px;
   }
 
   .calendar-dropdown {
@@ -620,7 +623,7 @@
 .branch-name-text {
   font-weight: 600;
   color: #4b5563;
-  font-size: 13px;
+  font-size: 11px;
 }
 
 .company-row.date-row:hover {
