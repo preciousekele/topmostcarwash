@@ -547,8 +547,9 @@
 
   .company-table tbody td {
     padding: 12px 8px;
-    font-size: 10.5px;
+    font-size: 11.5px;
     font-weight: 600;
+    color: black;
   }
 
   .company-name-cell,
@@ -585,7 +586,7 @@
   .detail-cell.item,
   .detail-cell.quantity,
   .detail-cell.company-earning {
-    font-size: 9px;
+    font-size: 11.8px;
   }
 
   .calendar-dropdown {

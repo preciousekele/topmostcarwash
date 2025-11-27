@@ -717,7 +717,9 @@
 
   .washer-table tbody td {
     padding: 8px 4px;
-    font-size: 10px;
+    font-size: 11px;
+    color: black;
+    letter-spacing: .5px;
   }
 
   .header-with-icon.washer {
@@ -725,7 +727,8 @@
   }
 
   .washer-name {
-    font-size: 10px;
+    font-size: 11.4px;
+    letter-spacing: .1px;
   }
 
   .washer-icon {
@@ -781,7 +784,7 @@
   }
 
   .detail-cell.service {
-    font-size: 9px;
+    font-size: 11.5px;
     line-height: 14px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -792,7 +795,7 @@
   .detail-cell.quantity,
   .detail-cell.worker-earning,
   .detail-cell.company-earning {
-    font-size: 9px;
+    font-size: 11.5px;
     line-height: 14px;
     white-space: nowrap;
   }

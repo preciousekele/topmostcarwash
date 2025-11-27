@@ -381,13 +381,11 @@ const UserData = () => {
                 </th>
                 <th>
                   <div className="header-with-icon">
-                    <ChevronsUpDown size={14} className="sort-icon-left" />
                     <span>Worker Pay</span>
                   </div>
                 </th>
                 <th>
                   <div className="header-with-icon">
-                    <ChevronsUpDown size={14} className="sort-icon-left" />
                     <span>Company Pay</span>
                   </div>
                 </th>
@@ -439,8 +437,8 @@ const UserData = () => {
                             <div className="wash-details-header">
                               <div className="detail-cell service">Service Type</div>
                               <div className="detail-cell quantity">Quantity</div>
-                              <div className="detail-cell worker-earning">Worker Earning</div>
-                              <div className="detail-cell company-earning">Company Earning</div>
+                              <div className="detail-cell worker-earning">Workers</div>
+                              <div className="detail-cell company-earning">Company</div>
                             </div>
                             {(() => {
                               const details = getWasherDetails(washer);
