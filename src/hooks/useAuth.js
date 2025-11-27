@@ -12,40 +12,79 @@ export const useLogin = () => {
   const { login, setError, setLoading, clearError } = useAuthStore();
 
   return useMutation({
-    mutationFn: (credentials) => authAPI.login(credentials),
+    mutationFn: async (credentials) => {
+      const response = await authAPI.login(credentials);
+      
+      // KEY FIX: Check if the response indicates failure
+      if (!response.success) {
+        // Throw an error to trigger onError callback
+        throw new Error(response.message || 'Invalid email or password');
+      }
+      
+      // Validate that we have the required data
+      if (!response.data?.user || !response.data?.token) {
+        throw new Error('Invalid response from server');
+      }
+      
+      return response;
+    },
     onMutate: () => {
       setLoading(true);
       clearError();
     },
     onSuccess: (response) => {
-      console.log('Login response:', response);
+      console.log('Login successful:', response);
       
-      if (response.success && response.data) {
-        const { user, token } = response.data;
-        
-        if (token && user) {
-          // Use the login action from store
-          login(user, token);
-          
-          // Invalidate and refetch any user-related queries
-          queryClient.invalidateQueries({ queryKey: ['user'] });
-          
-          // Navigate to dashboard
-          navigate('/dashboard');
-        } else {
-          setLoading(false);
-          setError('Invalid response from server');
-        }
-      } else {
-        setLoading(false);
-        setError(response.message || 'Login failed');
-      }
+      const { user, token } = response.data;
+      
+      // Use the login action from store
+      login(user, token);
+      
+      // Invalidate and refetch any user-related queries
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+      
+      // Stop loading before navigation
+      setLoading(false);
+      
+      // Navigate to dashboard
+      navigate('/dashboard');
     },
     onError: (error) => {
       console.error('Login error:', error);
       setLoading(false);
       setError(error.message || 'Login failed. Please try again.');
     },
+    // Remove onSettled to avoid conflicts
+  });
+};
+
+export const useLogout = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { logout } = useAuthStore();
+
+  return useMutation({
+    mutationFn: async () => {
+      // If you have a logout API endpoint, call it here
+      // await authAPI.logout();
+      return Promise.resolve();
+    },
+    onSuccess: () => {
+      // Clear auth state
+      logout();
+      
+      // Clear all cached queries
+      queryClient.clear();
+      
+      // Navigate to login
+      navigate('/login');
+    },
+    onError: (error) => {
+      console.error('Logout error:', error);
+      // Even if logout fails, clear local state and redirect
+      logout();
+      navigate('/login');
+    }
   });
 };
 
@@ -87,33 +126,6 @@ export const useRegister = () => {
       setLoading(false);
       setError(error.message || 'Registration failed. Please try again.');
     },
-  });
-};
-
-/**
- * Logout Hook
- */
-export const useLogout = () => {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { logout, setLoading } = useAuthStore();
-
-  return useMutation({
-    mutationFn: () => authAPI.logout(),
-    onMutate: () => setLoading(true),
-    onSuccess: () => {
-      logout();
-      queryClient.clear();
-      navigate('/login');
-    },
-    onError: (error) => {
-      console.error('Logout API error:', error);
-      // Even if API fails, clear local auth
-      logout();
-      queryClient.clear();
-      navigate('/login');
-    },
-    onSettled: () => setLoading(false),
   });
 };
 

@@ -39,7 +39,10 @@ export const useAuthStore = create(
 
       // Set error
       setError: (error) =>
-        set({ error }),
+        set({ 
+          error,
+          isLoading: false // Always stop loading when error occurs
+        }),
 
       // Clear error
       clearError: () =>
@@ -88,7 +91,7 @@ export const useAuthStore = create(
           user,
           token,
           isAuthenticated: true,
-          isLoading: false,
+          isLoading: false, // Stop loading on successful login
           error: null,
         });
       },

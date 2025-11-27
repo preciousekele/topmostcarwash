@@ -29,11 +29,19 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    // CRITICAL FIX: Only redirect to login if we're NOT already on the login page
+    // and if we have a token (meaning user was authenticated but token expired)
     if (error.response?.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem("token");
-      localStorage.removeItem("auth-storage");
-      window.location.href = "/login";
+      const token = localStorage.getItem("token");
+      const isLoginPage = window.location.pathname === "/login";
+      
+      // Only redirect if user was authenticated and is not on login page
+      if (token && !isLoginPage) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("auth-storage");
+        window.location.href = "/login";
+      }
+      // If on login page, just reject the error so it can be handled by the login form
     }
     return Promise.reject(error);
   }
@@ -48,11 +56,44 @@ export const authAPI = {
   login: async (credentials) => {
     try {
       const response = await apiClient.post("/api/auth/login", credentials);
-      return response.data;
+      const data = response.data;
+      
+      console.log('Login API response:', data); // Debug log
+      
+      // Check if backend returned success: false
+      if (data.success === false) {
+        const error = new Error(data.message || "Invalid email or password");
+        error.isAuthError = true;
+        throw error;
+      }
+      
+      // Validate we have required data
+      if (!data.data?.user || !data.data?.token) {
+        const error = new Error('Invalid response from server');
+        error.isAuthError = true;
+        throw error;
+      }
+      
+      return data;
     } catch (error) {
-      const message =
-        error.response?.data?.message || "Login failed. Please try again.";
-      throw new Error(message);
+      // Handle 401 errors from backend
+      if (error.response?.status === 401) {
+        const message = error.response.data?.message || "Invalid email or password";
+        const authError = new Error(message);
+        authError.isAuthError = true;
+        throw authError;
+      }
+      
+      // If it's already our custom error, just re-throw
+      if (error.isAuthError) {
+        throw error;
+      }
+      
+      // Handle other errors
+      const message = error.response?.data?.message || error.message || "Login failed. Please try again.";
+      const newError = new Error(message);
+      newError.isAuthError = true;
+      throw newError;
     }
   },
 
@@ -62,15 +103,16 @@ export const authAPI = {
    * @returns {Promise} API response
    */
   register: async (userData) => {
-    try {
-      const response = await apiClient.post("/auth/register", userData);
-      return response.data;
-    } catch (error) {
-      const message =
-        error.response?.data?.message ||
-        "Registration failed. Please try again.";
-      throw new Error(message);
+    const response = await apiClient.post("/auth/register", userData);
+    const data = response.data;
+    
+    if (data.success === false) {
+      const error = new Error(data.message || "Registration failed");
+      error.isAuthError = true;
+      throw error;
     }
+    
+    return data;
   },
 
   /**
@@ -93,14 +135,8 @@ export const authAPI = {
    * @returns {Promise} API response
    */
   getCurrentUser: async () => {
-    try {
-      const response = await apiClient.get("/api/auth/me");
-      return response.data;
-    } catch (error) {
-      const message =
-        error.response?.data?.message || "Failed to fetch user data.";
-      throw new Error(message);
-    }
+    const response = await apiClient.get("/api/auth/me");
+    return response.data;
   },
 
   /**
@@ -109,14 +145,16 @@ export const authAPI = {
    * @returns {Promise} API response
    */
   changePassword: async (passwords) => {
-    try {
-      const response = await apiClient.put("/auth/change-password", passwords);
-      return response.data;
-    } catch (error) {
-      const message =
-        error.response?.data?.message || "Failed to change password.";
-      throw new Error(message);
+    const response = await apiClient.put("/auth/change-password", passwords);
+    const data = response.data;
+    
+    if (data.success === false) {
+      const error = new Error(data.message || "Failed to change password");
+      error.isAuthError = true;
+      throw error;
     }
+    
+    return data;
   },
 
   /**
@@ -124,14 +162,8 @@ export const authAPI = {
    * @returns {Promise} API response
    */
   getBranches: async () => {
-    try {
-      const response = await apiClient.get("/auth/branches");
-      return response.data;
-    } catch (error) {
-      const message =
-        error.response?.data?.message || "Failed to fetch branches.";
-      throw new Error(message);
-    }
+    const response = await apiClient.get("/auth/branches");
+    return response.data;
   },
 
   /**
@@ -140,14 +172,16 @@ export const authAPI = {
    * @returns {Promise} API response
    */
   forgotPassword: async (email) => {
-    try {
-      const response = await apiClient.post("/auth/forgot-password", { email });
-      return response.data;
-    } catch (error) {
-      const message =
-        error.response?.data?.message || "Failed to process request.";
-      throw new Error(message);
+    const response = await apiClient.post("/auth/forgot-password", { email });
+    const data = response.data;
+    
+    if (data.success === false) {
+      const error = new Error(data.message || "Failed to process request");
+      error.isAuthError = true;
+      throw error;
     }
+    
+    return data;
   },
 
   /**
@@ -156,14 +190,16 @@ export const authAPI = {
    * @returns {Promise} API response
    */
   resetPassword: async (data) => {
-    try {
-      const response = await apiClient.post("/auth/reset-password", data);
-      return response.data;
-    } catch (error) {
-      const message =
-        error.response?.data?.message || "Failed to reset password.";
-      throw new Error(message);
+    const response = await apiClient.post("/auth/reset-password", data);
+    const responseData = response.data;
+    
+    if (responseData.success === false) {
+      const error = new Error(responseData.message || "Failed to reset password");
+      error.isAuthError = true;
+      throw error;
     }
+    
+    return responseData;
   },
 };
 
